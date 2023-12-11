@@ -1,0 +1,80 @@
+<?php
+
+namespace Repositories\Users;
+
+use Database\DatabaseInterface;
+use DTO\RequestsModel\UserRegistrationBidingModel;
+use DTO\UserDTO;
+use DTO\UserEditDTO;
+use DTO\UserEditPinDTO;
+
+class UserRepository implements UserRepositoryInterface
+{
+
+  private  $db;
+
+    /**
+     * @var DatabaseInterface
+     */
+    public function __construct(DatabaseInterface $db)
+    {
+        $this->db = $db;
+    }
+
+    public function register(UserRegistrationBidingModel $model)
+    {
+        $this->db->query("INSERT INTO users (username, password, pin) values (?,?,?)")
+            ->execute([$model->getUsername(),$model->getPassword(),$model->getPin()]);
+    }
+
+    public function getByUsername(string $username): ?UserDTO
+    {
+
+        return $this->db->query("SELECT * FROM users WHERE username = ?")
+            ->execute([$username])
+            ->fetch(UserDTO::class);
+
+    }
+
+
+    public function getById(int $id): ?UserDTO
+    {
+       return $this->db->query("SELECT * FROM users WHERE id = ?")->execute([$id])->fetch(UserDTO::class);
+
+    }
+
+    public function edit(int $id, UserEditDTO $userEditDTO, bool $changePassword)
+    {
+        $query = "UPDATE users SET username = ?";
+        $params = [$userEditDTO->getUsername()];
+        if ($changePassword) {
+            $query .= ", password = ?";
+            $params[] = $userEditDTO->getNewPassword();
+        }
+        $query .= " WHERE id = ?";
+        $params[] = $id;
+
+        $this->db->query($query)->execute($params);
+    }
+
+    public function setPictureUrl(int $id, string $filePath)
+    {
+        $this->db->query("UPDATE users SET url = ? WHERE id = ?")
+            ->execute([$filePath, $id]);
+    }
+
+
+    public function editPin(int $id,UserEditPinDTO $userEditPinDTO, bool $changePassword)
+    {
+        $query = "UPDATE users SET username = ?";
+        $params = [$userEditPinDTO->getUsername()];
+        if ($changePassword) {
+            $query .= ", password = ?";
+            $params[] = $userEditPinDTO->getNewPassword();
+        }
+        $query .= " WHERE id = ?";
+        $params[] = $id;
+
+        $this->db->query($query)->execute($params);
+    }
+}
