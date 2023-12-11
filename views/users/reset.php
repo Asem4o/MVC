@@ -4,24 +4,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit your profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset your profile</title>
+    <link rel="stylesheet" href="../../CSS/users/style.css">
 </head>
 
 <body>
-<h1>Reset</h1>
+<div class="login-container">
 
-<?php if (isset($errors) && is_array($errors)): ?>
-    <?php foreach ($errors as $error): ?>
-        <div id="error" style="color:red">
-            <h1><?= $error; ?></h1>
-        </div>
-    <?php endforeach; ?>
-<?php endif; ?>
-<form method="post" action="resetPin">
-    UserName <input type="text" name="username"><br/>
-    PIN <input type="text" name="pin"><br/>
-    New Password: <input type="password" name="password"><br/>
-    <input type="submit" name="login" value="Reset!"/>
-</form><br>
+    <header>
+        <h1>Reset</h1>
+    </header>
+
+    <form method="post" action="resetPin">
+
+
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br/>
+
+        <label for="pin">PIN:</label>
+        <input type="text" name="pin" id="pin" required><br/>
+
+        <label for="password">New Password:</label>
+        <input type="password" name="password" id="password" required><br/>
+
+        <input type="submit" name="login" value="Reset!"/>
+    </form>
+</div>
+
 </body>
 </html>

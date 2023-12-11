@@ -84,6 +84,7 @@ class UserRegistrationBidingModel
      */
     public function getUsername()
     {
+
         return $this->username;
     }
 

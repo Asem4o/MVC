@@ -1,7 +1,9 @@
 <?php
 namespace Services\Narqd;
 use DateTime;
+use Exception\User\NarqdCreateException;
 use Exception\User\NarqdDeleteException;
+use Exception\User\NarqdEditException;
 use Exception\User\NoteEditException;
 use Repositories\Narqd\NarqdRepositoryInterface;
 use Repositories\Users\UserRepositoryInterface;
@@ -19,6 +21,9 @@ class NarqdService implements NarqdServiceInterface
     {
         $user = $this->userRepository->getById($id);
         $userId = $user->getId();
+        if (!is_numeric($narqd)) {
+           throw new NarqdCreateException("invalid number");
+        }
         $narqd = $this->narqdRepository->create($userId,$narqd,$date);
         return $narqd;
     }
@@ -42,7 +47,9 @@ class NarqdService implements NarqdServiceInterface
             $dateTime = new DateTime($narqdDate);
             $formattedDate = $dateTime->format('Y-m');
 
-
+            if (!is_numeric($floatHours)){
+                echo "gg";
+            }
             if (!isset($monthlySum[$formattedDate])) {
                 // If the month key doesn't exist, initialize it with the compensation hours
                 $monthlySum[$formattedDate] = $floatHours;
@@ -80,7 +87,12 @@ class NarqdService implements NarqdServiceInterface
         if ($currentId != $userId){
             throw new NoteEditException("dont have access to this note!");
         }
-
+        if (!is_numeric($text)) {
+            throw new NarqdEditException("invalid number");
+        }
+        if (strlen($text) > 255){
+            throw new NarqdEditException("too long text");
+        }
         $editNarqd = $this->narqdRepository->editNarqd($id,$text);
         return $editNarqd;
     }

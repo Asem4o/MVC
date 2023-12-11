@@ -12,7 +12,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../CSS/users/picture.css">
 </head>
-
+<?php if ($model->getError() !== null): ?>
+<div class="error-box">
+    <h1><?= $model->getError(); ?></h1>
 <body>
 <div class="note">
     <h1>Change Profile Picture</h1>
@@ -33,9 +35,10 @@
     </div>
 </div>
 
-<!-- Bootstrap JS and Popper.js (required for Bootstrap) -->
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
+<?php endif; ?>

@@ -5,24 +5,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit your profile</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../CSS/users/password.css">
 </head>
 
 <body>
-<h1>Change password </h1>
+<div class="note">
+    <h1>Change Password</h1>
 
-<?php if (isset($errors) && is_array($errors)): ?>
-    <?php foreach ($errors as $error): ?>
-        <div id="error" style="color:red">
-            <h1><?= $error; ?></h1>
+    <form method="post" action="editPassword" class="mb-4">
+        <div class="form-group">
+            <label for="old">Old Password:</label>
+            <input type="password" id="old" name="old" class="form-control" required>
         </div>
-    <?php endforeach; ?>
-<?php endif; ?>
+        <div class="form-group">
+            <label for="new">New Password:</label>
+            <input type="password" id="new" name="new" class="form-control" required>
+        </div>
+        <div>
+            <button type="submit" name="edit" class="btn btn-warning">Change Password</button>
+        </div>
+    </form>
+</div>
 
-<form method="post" action="editPassword">
-    Old Password: <input type="password" name="old"><br />
-    New Password: <input type="password" name="new"><br />
-    <input type="submit" name="edit" value="ChangePassword!" />
-</form>
+<!-- Bootstrap JS and Popper.js (required for Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
-</html
+</html>

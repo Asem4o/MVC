@@ -41,6 +41,12 @@ class UserService implements UserServiceInterface
         if (strlen($userDTO->getUsername()) < self::MIN_USER_LENGTH) {
             throw new RegistrationException("User length too short");
         }
+        $existingUser = $this->userRepository->getByUsername($userDTO->getUsername());
+
+        if ($existingUser && $existingUser->getUsername() == $userDTO->getUsername()) {
+            throw new RegistrationException("User already exists");
+        }
+
 
         $passwordHash = password_hash($userDTO->getPassword(), PASSWORD_ARGON2I);
         $userDTO->setPassword($passwordHash);

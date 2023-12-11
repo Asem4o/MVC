@@ -2,6 +2,7 @@
 namespace Services\Note;
 use DTO\Note;
 use DTO\NoteEdit;
+use Exception\User\NoteCreateException;
 use Exception\User\NoteDeleteException;
 use Exception\User\NoteEditException;
 use Repositories\Note\NoteRepositoryInterface;
@@ -28,6 +29,9 @@ class NoteService implements NoteServiceInterface
         $user = $this->userRepository->getById($userId);
 
         $userId = $user->getId();
+        if (strlen($note) > 255){
+            throw new NoteCreateException("too long text");
+        }
         $note = $this->noteRepository->create($userId,$note);
         return $note;
 
@@ -77,7 +81,9 @@ class NoteService implements NoteServiceInterface
         if ($currentId != $userId){
             throw new NoteEditException("dont have access to this note!");
         }
-
+        if (strlen($text) > 255){
+            throw new NoteEditException("too long text");
+        }
         $editNote = $this->noteRepository->editNote($noteId,$text);
         return $editNote;
     }
