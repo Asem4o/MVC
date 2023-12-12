@@ -47,15 +47,18 @@ class Application
     }
 
     public function start(){
-        $fullControllerName = 'Controller\\'. ucfirst($this->mvcContext->getControllerName()).'Controller';
-        if (!class_exists($fullControllerName) || !method_exists($fullControllerName,$this->mvcContext->getActionName())){
+        $fullControllerName = 'Controller\\' . ucfirst($this->mvcContext->getControllerName()) . 'Controller';
 
-            if (!$this->router->invoke($this->uri,$this->serverInfo['REQUEST_METHOD'])){
-                http_response_code(404);
-                header("Location: users/login");
-            }
+        if (!class_exists($fullControllerName)) {
+            header("Location: users/login"); // Redirect to "login" if UsersController doesn't exist
             exit;
         }
+
+        if (!method_exists($fullControllerName, $this->mvcContext->getActionName())) {
+            header("Location: /users/login"); // Redirect to "users/login" if the specified action doesn't exist
+            exit;
+        }
+
         $controllerInstance = $this->resolve($fullControllerName);
         $getParams = $this->mvcContext->getParams();
         $paramCount = count($getParams);

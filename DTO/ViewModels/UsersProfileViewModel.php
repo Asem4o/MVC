@@ -32,6 +32,23 @@ class UsersProfileViewModel
 
     private $noteCreated;
 
+    private $token;
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $token
+     */
+    public function setToken($token): void
+    {
+        $this->token = $token;
+    }
     private $error;
 
     /**
@@ -53,7 +70,7 @@ class UsersProfileViewModel
 
 
     public function __construct($id,$username, $profilePictureUrl=null,
-                                $note =null,$noteId=null,$error=null)
+                                $note =null,$noteId=null,$error=null,$token)
     {
         $this->id=$id;
         $this->username = $username;
@@ -61,6 +78,7 @@ class UsersProfileViewModel
         $this->note=$note;
         $this->noteId=$noteId;
         $this->error=$error;
+        $this->token =$token;
     }
 
     /**

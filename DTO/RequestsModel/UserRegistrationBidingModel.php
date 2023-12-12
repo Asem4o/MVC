@@ -10,6 +10,23 @@ class UserRegistrationBidingModel
 
     private $confirmPassword;
 
+    private $ipadress;
+
+    /**
+     * @return mixed
+     */
+    public function getIpadress()
+    {
+        return $this->ipadress;
+    }
+
+    /**
+     * @param mixed $ipadress
+     */
+    public function setIpadress($ipadress): void
+    {
+        $this->ipadress = $ipadress;
+    }
     private $pin;
     private $error;
 

@@ -24,6 +24,9 @@ class NarqdService implements NarqdServiceInterface
         if (!is_numeric($narqd)) {
            throw new NarqdCreateException("invalid number");
         }
+        if ($narqd > 150){
+            throw new NarqdCreateException("imposible compensation");
+        }
         $narqd = $this->narqdRepository->create($userId,$narqd,$date);
         return $narqd;
     }
@@ -84,13 +87,14 @@ class NarqdService implements NarqdServiceInterface
     {
         $user =$this->userRepository->getById($_SESSION['id']);
         $currentId = $user->getId();
+        $currentNumber =(float)$text;
         if ($currentId != $userId){
             throw new NoteEditException("dont have access to this note!");
         }
         if (!is_numeric($text)) {
             throw new NarqdEditException("invalid number");
         }
-        if (strlen($text) > 255){
+        if ($currentNumber> 255){
             throw new NarqdEditException("too long text");
         }
         $editNarqd = $this->narqdRepository->editNarqd($id,$text);

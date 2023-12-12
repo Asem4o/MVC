@@ -9,6 +9,7 @@ spl_autoload_register(function ($class) {
 
 $router = new \Routing\Router();
 require_once 'routes.php';
+require_once 'function.php';
 $self =$_SERVER['PHP_SELF'];
 $uri =$_SERVER['REQUEST_URI'];
 $uriInfo = explode('/',$uri);

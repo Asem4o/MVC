@@ -35,12 +35,18 @@ class UsersController
 
     public function login()
     {
-        return $this->view->render();
+
+        $csrfToken = generateCsrfToken();
+
+        $userRegister = new UsersProfileViewModel(null, null, null, null, null, null, $csrfToken);
+
+        $this->view->render($userRegister);
     }
+
 
     public function loginProcess(UserServiceInterface $userService, UserRegistrationBidingModel $model)
     {
-
+        $csrfToken = generateCsrfToken();
         try {
             if ($userService->verifyCredentials($model->getUsername(), $model->getPassword())) {
 
@@ -50,7 +56,7 @@ class UsersController
             }
         } catch (\Exception\User\LoginException $e) {
           $e= $e->getMessage();
-          $usersLogin = new UsersProfileViewModel(null,null,null,null,null,$e);
+          $usersLogin = new UsersProfileViewModel(null,null,null,null,null,$e ,$csrfToken );
           $this->view->render($usersLogin);
         }
 
@@ -58,45 +64,59 @@ class UsersController
 
     public function register()
     {
-        $this->view->render();
+
+
+        $csrfToken = generateCsrfToken();
+
+        $userRegister = new UsersProfileViewModel(null, null, null, null, null, null, $csrfToken);
+        $this->view->render($userRegister);
+
     }
 
     public function registerProcess(UserRegistrationBidingModel $bidingModel, UserServiceInterface $userService)
     {
 
+
+
+        $csrfToken = generateCsrfToken();
         try {
-            $userService->register($bidingModel);
-            header("Location: login");
-        }catch (\Exception\User\RegistrationException $e)
-        {
-            $e= $e->getMessage();
-            $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e);
+
+          $userService->register($bidingModel);
+          header("Location: login");
+        } catch (\Exception\User\RegistrationException $e) {
+            $errorMessage = $e->getMessage();
+            $userRegister = new UsersProfileViewModel(null, null, null, null, null, $errorMessage,$csrfToken);
             $this->view->render($userRegister);
+
         }
-
-
     }
+
 
     public function profile(UserServiceInterface $userService,NoteServiceInterface $noteService,NarqdServiceInterface $narqdService)
     {
+
         if (!isset($_SESSION['id'])) {
             header("Location: login");
             exit;
         }
-
+        $csrfToken = generateCsrfToken();
 
         $user = $userService->findOne($_SESSION['id']);
         $id =$user->getId();
         $note = $noteService->showNotes($user->getId());
         $narqd =$narqdService->showNarqd($user->getId());
-        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), $user->getUrl(),$note,$narqd);
+
+        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), $user->getUrl(),$note,$narqd,null,$csrfToken);
         $this->view->render($userProfile);
     }
 
 
     public function editProfilePicture()
     {
-
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
         $this->view->render();
     }
 
@@ -105,6 +125,7 @@ class UsersController
 
         $user = $userService->findOne($_SESSION['id']);
         $id = $user->getId();
+        $csrfToken = generateCsrfToken();
         if (isset($_FILES['profile_picture'])) {
             try {
                 $userService->setProfilePicture(
@@ -116,7 +137,7 @@ class UsersController
                 header("Location: profile");
             } catch (\Exception\User\UploadException $e) {
                 $e= $e->getMessage();
-                $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e);
+                $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e,$csrfToken);
                 $this->view->render($userRegister);
             }
 
@@ -124,47 +145,69 @@ class UsersController
     }
 
     public function changePassword()
-    {
+    {     if (!isset($_SESSION['id'])) {
+        header("Location: login");
+        exit;
+    }
         $this->view->render();
     }
 
     public function editPassword(UserServiceInterface $userService)
     {
 
+
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
         $user = $userService->findOne($_SESSION['id']);
         $id = $user->getId();
         $username = $user->getUsername();
         $oldPassword = htmlspecialchars($_POST['old']);
         $newPassword = htmlspecialchars($_POST['new']);
-
+        $csrfToken = generateCsrfToken();
         try {
             $userService->edit($id, new UserEditDTO($id, $username, $oldPassword, $newPassword));
             header("Location: profile");
             exit;
         } catch (\Exception\User\LoginException $e) {
             $e= $e->getMessage();
-            $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e);
+            $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e,$csrfToken);
             $this->view->render($userRegister);
         }
 
     }
     public function note(){
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
         $this->view->render();
     }
     public function createNote(UserServiceInterface $userService , NoteServiceInterface $service){
 
         try {
-            $user = $userService->findOne($_SESSION['id']);
-            $id = $user->getId();
-            $note = htmlspecialchars($_POST['note']);
-            $service->create($id,$note);
-            header("Location: profile");
+            if (isset($_POST['note'])){
+                $user = $userService->findOne($_SESSION['id']);
+                $id = $user->getId();
+                $note = htmlspecialchars($_POST['note']);
+                $service->create($id,$note);
+                header("Location: profile");
+            }else {
+                // Redirect logic here
+                header('Location: login');
+                exit();
+            }
         } catch (\Exception\User\NoteCreateException $e){
             echo $e = $e->getMessage();
         }
     }
     public  function deleteNote(NoteServiceInterface $service){
 
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
         try {
             $noteID = htmlspecialchars($_POST["note_id"]);
             $userId = htmlspecialchars($_POST['deleteId']);
@@ -178,27 +221,39 @@ class UsersController
         }
     }
     public function editNote(UserServiceInterface $userService) {
+        if (isset($_POST['noteId']) && $_POST['content']) {
+            $noteId = htmlspecialchars($_POST['noteId']);
+            $noteId = (int) $noteId;
+            $firstNoteContent = htmlspecialchars($_POST['content']);
+            $user = $userService->findOne($_SESSION['id']);
+            $id = $user->getId();
+            $csrfToken = generateCsrfToken();
+            $userProfile = new UsersProfileViewModel($id, $user->getUsername(), null, $firstNoteContent, $noteId,null,$csrfToken);
+            $this->view->render($userProfile);
+        } else {
 
-        $noteId =htmlspecialchars($_POST['noteId']);
-        $noteId =(int)$noteId;
-        $firstNoteContent =htmlspecialchars($_POST['content']);
-         $user = $userService->findOne($_SESSION['id']);
-         $id =$user->getId();
-        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), null,$firstNoteContent, $noteId);
-        $this->view->render($userProfile);
+            header('Location: login');
+            exit();
+        }
+
     }
-
 
     public function editUserNote(NoteServiceInterface $service, UserServiceInterface $userService)
     {
         try {
-            $user = $userService->findOne($_SESSION['id']);
-            $userId = htmlspecialchars((int)$_POST['userId']);
-            $noteId = htmlspecialchars((int)$_POST['noteId']);
-            $content = htmlspecialchars($_POST['note']);
-            $service->editNoteById($userId, $noteId, $content);
-            header("Location: profile");
-            exit();
+            if (isset($_POST['userId']) && $_POST['noteId']) {
+                $user = $userService->findOne($_SESSION['id']);
+                $userId = htmlspecialchars((int) $_POST['userId']);
+                $noteId = htmlspecialchars((int) $_POST['noteId']);
+                $content = htmlspecialchars($_POST['note']);
+                $service->editNoteById($userId, $noteId, $content);
+                header("Location: profile");
+                exit();
+            }else{
+                header('Location: login');
+                exit();
+            }
+
         } catch (\Exception\User\NoteEditException $e) {
 
             echo $e = $e->getMessage();
@@ -217,12 +272,13 @@ class UsersController
             $username = htmlspecialchars($_POST['username']);
             $pin =htmlspecialchars($_POST['pin']);
             $newPassword =htmlspecialchars($_POST['password']);
+            $csrfToken = generateCsrfToken();
             $userService->editPin($username,new UserEditPinDTO($username, $pin, $newPassword));
           header("Location: login");
             exit;
         } catch (\Exception\User\ChangePassWithPinException $e) {
             $e= $e->getMessage();
-            $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e);
+            $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e,$csrfToken);
             $this->view->render($userRegister);
         }
     }
@@ -231,33 +287,48 @@ class UsersController
         header("Location: login");
     }
     public function hours(){
+
         $this->view->render();
     }
 
     public function createhours(UserServiceInterface $userService , NarqdServiceInterface $service){
 
         try {
-            $user = $userService->findOne($_SESSION['id']);
-            $id = $user->getId();
-            $date =htmlspecialchars($_POST['date']);
-            $dateTime = new DateTime($date);
-            $formattedDate = $dateTime->format('Y-m-d');
-            $hours =htmlspecialchars($_POST['hours']);
+            if (isset($_POST['date']) && $_POST['hours']){
+                $user = $userService->findOne($_SESSION['id']);
+                $id = $user->getId();
+                $date =htmlspecialchars($_POST['date']);
+                $dateTime = new DateTime($date);
+                $formattedDate = $dateTime->format('Y-m-d');
+                $hours =htmlspecialchars($_POST['hours']);
 
-            $service->create($id,$hours,$formattedDate);
-            header("Location: profile");
+                $service->create($id,$hours,$formattedDate);
+                header("Location: profile");
+            }else{
+                header("Location: login");
+                exit();
+            }
+
         } catch (\Exception\User\NarqdCreateException $e){
             echo $e =$e->getMessage();
+            header("Refresh: 2; URL=profile");
+            exit;
         }
     }
 
     public function deletenarqd(NarqdServiceInterface $narqdService){
 
         try {
-            $narqdId =htmlspecialchars($_POST['narqdId']);
-            $userId =htmlspecialchars($_POST['deleteId']);
-            $narqdService->deleteNarqdById($narqdId,$userId);
-            header("Location: profile");
+            if (isset($_POST['narqdId']) && $_POST['deleteId']){
+                $narqdId =htmlspecialchars($_POST['narqdId']);
+                $userId =htmlspecialchars($_POST['deleteId']);
+                $narqdService->deleteNarqdById($narqdId,$userId);
+                header("Location: profile");
+            }else{
+                header('Location: login');
+                exit();
+            }
+
         }catch (\Exception\User\NarqdDeleteException $e){
             echo $e =$e->getMessage();
             header("Refresh: 2; URL=profile");
@@ -267,23 +338,39 @@ class UsersController
     }
     public function editNarqd(UserServiceInterface $userService){
 
-        $narqdId =htmlspecialchars($_POST['narqdId']);
-        $noteId =(int)$narqdId;
-        $firstNoteContent =htmlspecialchars($_POST['content']);
-        $user = $userService->findOne($_SESSION['id']);
-        $id =$user->getId();
-        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), null,$firstNoteContent, $noteId);
-        $this->view->render($userProfile);
+        if (isset($_POST['narqdId']) && $_POST['content']) {
+            $narqdId = htmlspecialchars($_POST['narqdId']);
+            $noteId = (int) $narqdId;
+            $firstNoteContent = htmlspecialchars($_POST['content']);
+            $user = $userService->findOne($_SESSION['id']);
+            $csrfToken = generateCsrfToken();
+            $id = $user->getId();
+            $userProfile = new UsersProfileViewModel($id, $user->getUsername(), null,
+                $firstNoteContent, $noteId,null,$csrfToken);
+            $this->view->render($userProfile);
+        } else {
+            header('Location: login');
+            exit();
+        }
+
     }
     public function editUserNarqd(NarqdServiceInterface $narqdService, UserServiceInterface $userService){
         try {
-            $user = $userService->findOne($_SESSION['id']);
-            $id =$user->getId();
-            $narqdUserId = htmlspecialchars((int)$_POST['narqdId']);
-            $content =htmlspecialchars($_POST['note']);
-            $narqdService->editNarqdById($id, $narqdUserId, $content);
-            header("Location: profile");
-            exit();
+            if (isset($_POST['narqdId'])){
+                $user = $userService->findOne($_SESSION['id']);
+                $id =$user->getId();
+                $narqdUserId = htmlspecialchars((int)$_POST['narqdId']);
+
+
+                $content =htmlspecialchars($_POST['note']);
+
+                $narqdService->editNarqdById($id, $narqdUserId, $content);
+                header("Location: profile");exit();
+            }else{
+                header('Location: login');
+                exit();
+            }
+
         } catch (\Exception\User\NarqdEditException $e) {
 
             echo $e = $e->getMessage();

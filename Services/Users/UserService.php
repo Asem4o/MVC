@@ -18,7 +18,7 @@ use DTO\UserEditDTO;
 class UserService implements UserServiceInterface
 {
     const MIN_USER_LENGTH = 5;
-    const MAX_ALLOWED_SIZE = 300000000;
+    const MAX_ALLOWED_SIZE = 30000000;
     const ALLOWED_IMAGE_PREFIX = 'image/';
 
     private $userRepository;

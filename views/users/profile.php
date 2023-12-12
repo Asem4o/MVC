@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="profile">
-
+    <input type="hidden" name="csrfToken" value="<?= $model->getToken() ?>">
     <div class="edit">
         <div class="edit-link">
             <a href="editProfilePicture" class="btn-primary">Change Profile Picture</a>

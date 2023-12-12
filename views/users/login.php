@@ -25,7 +25,7 @@
 
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" required><br />
-
+        <input type="hidden" name="csrfToken" value="<?= $model->getToken() ?>">
             <input type="submit" name="login" value="Login!">
     </form>
 
