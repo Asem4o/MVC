@@ -9,4 +9,5 @@ interface OtpuskaRepositoryInterface
     public function getAllOtpuska(int $id): ?array;
     public function deleteOtpuska(int $id);
     public function editOtpuska (int $id,string $text);
+
 }

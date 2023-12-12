@@ -2,11 +2,11 @@
 
 namespace Repositories\Otpuska;
 
+
+
 use Database\DatabaseInterface;
-use DTO\Narqd;
-use DTO\Note;
-use DTO\UserDTO;
-use DTO\otpuska;
+use DTO\Otpuska;
+
 class OtpuskaRepository implements OtpuskaRepositoryInterface
 {
     private  $db;
@@ -35,7 +35,9 @@ class OtpuskaRepository implements OtpuskaRepositoryInterface
 
     public function deleteOtpuska(int $id)
     {
-        // TODO: Implement deleteOtpuska() method.
+        $query = "DELETE FROM otpuska WHERE id = ?";
+        $result = $this->db->query($query)->execute([$id])->fetch(Otpuska::class);
+        return $result;
     }
 
     public function editOtpuska(int $id, string $text)
@@ -43,4 +45,6 @@ class OtpuskaRepository implements OtpuskaRepositoryInterface
         $query = "UPDATE otpuska SET otpuska = ? WHERE id = ?";
         $result = $this->db->query($query)->execute([$text, $id]);
     }
+
+
 }

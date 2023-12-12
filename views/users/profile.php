@@ -8,19 +8,24 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../CSS/users/profile.css">
     <script src="../../JS/users/otpuska.js"></script>
+
+
 </head>
 <body>
 <div class="profile">
     <input type="hidden" name="csrfToken" value="<?= $model->getToken() ?>">
     <div class="edit">
 
-        <div class="pic">
-                <img width="50px" src="../<?= $model->getProfilePictureUrl(); ?>" alt=""/><br>
-                    Welcome, <?= $model->getUsername() ?>
+        <div class="pic-container">
+            <div class="pic">
+                <img width="50px" src="../<?= $model->getProfilePictureUrl(); ?>" alt="" />
+            </div>
+            <div class="pic-text">
+                Welcome, <?= $model->getUsername() ?>
+            </div>
         </div>
 
         <div class="edit-link">
-
             <a href="editProfilePicture" class="btn-primary">Change Profile Picture</a>
         </div>
         <div class="edit-link">
@@ -33,45 +38,46 @@
 
     </div>
 
-    <h1>Otpuska</h1>
+    <h1>Holiday days</h1>
     <div class="otpuska">
         <?php
         $data = $model->getOtpuska();
 
-        if (isset($data['otpuska']) && !empty($data['otpuska'])) {
-            foreach ($data['otpuska'] as $compensation) {
+        if (isset($data['otpuska']) && !empty($data['otpuska'])):
+            foreach ($data['otpuska'] as $compensation):
                 ?>
                 <div class="compensation-item">
-                    <strong>Otpuska:</strong>
+                    <strong>Holiday days:</strong>
                     <span id="days-<?= $compensation['id'] ?>" class="days"><?= isset($compensation['days']) ? $compensation['days'] : 'N/A' ?></span>
-                    <button class="btn-increment" onclick="changeDays('<?= $compensation['id'] ?>', '+', '<?= $compensation['created'] ?>')">+</button>
-                    <button class="btn-decrement" onclick="changeDays('<?= $compensation['id'] ?>', '-', '<?= $compensation['created'] ?>')">-</button>
+                    <div class="btn-group" role="group" aria-label="Change Days">
+                        <button type="button" class="btn btn-secondary btn-outline-dark" onclick="changeDays('<?= $compensation['id'] ?>', '+', '<?= $compensation['created'] ?>')">+</button>
+                        <button type="button" class="btn btn-secondary btn-outline-danger" onclick="changeDays('<?= $compensation['id'] ?>', '-', '<?= $compensation['created'] ?>')">-</button>
+                    </div>
                     <br>
                     <strong>Created:</strong> <?= isset($compensation['created']) ? $compensation['created'] : 'N/A' ?>
                 </div>
-
-                <?php
-            }
-            ?>
-            <button class="btn-save" onclick="saveChanges()">Save</button>
             <?php
+            endforeach;
+            ?>
+            <button class="btn btn-primary btn-save" onclick="saveChanges()">Save</button>
 
-            if (isset($data['monthlySum'])) {
-                foreach ($data['monthlySum'] as $month => $sum) {
+            <?php
+            if (isset($data['monthlySum'])):
+                foreach ($data['monthlySum'] as $month => $sum):
                     ?>
-                    <strong>Monthly Sum for <?= $month ?>:</strong> <?= $sum ?><br>
-                    <?php
-                }
-            }
-        } else {
-            echo "No compensation available.";
-        }
+                    <strong>Total holiday days <?= $month ?>:</strong> <?= $sum ?><br>
+                <?php
+                endforeach;
+            endif;
+        else:
+            echo "No otpuska available.";
+        endif;
         ?><br><br>
-    </div>
+    </div><br>
     <div class="bottons">
-        <a href="note" class="btn btn-primary">add note</a>
-        <a href="hours" class="btn btn-primary">add compensation Hours</a>
-        <a href="otpuska" class="btn btn-primary">add Otpuska</a>
+        <a href="note" class="btn btn-primary">Add Note</a>
+        <a href="hours" class="btn btn-primary">Add compensation hours</a>
+        <a href="otpuska" class="btn btn-primary">Add holiday days</a>
     </div>
 
     <h1>Notes</h1>
@@ -106,7 +112,7 @@
 
     </div>
 
-    <h1>Narqd Compensation</h1>
+    <h1>Hours Compensation</h1>
     <div class="narqd">
         <?php
         $data = $model->getNoteId();
@@ -114,7 +120,7 @@
         if (isset($data['narqds']) && !empty($data['narqds'])) {
             foreach ($data['narqds'] as $compensation) {
                 ?>
-                <strong>Narqd Compensation:</strong> <?= isset($compensation['compensation']) ? $compensation['compensation'] : 'N/A' ?><br>
+                <strong>Hours Compensation:</strong> <?= isset($compensation['compensation']) ? $compensation['compensation'] : 'N/A' ?><br>
                 <strong>Created:</strong> <?= isset($compensation['created']) ? $compensation['created'] : 'N/A' ?><br>
 
                 <form method="post" action="deleteNarqd" style="display: inline;">
@@ -133,7 +139,7 @@
             if (isset($data['monthlySum'])) {
                 foreach ($data['monthlySum'] as $month => $sum) {
                     ?>
-                    <strong>Monthly Sum for <?= $month ?>:</strong> <?= $sum ?><br>
+                    <strong>Hours monthly sum for <?= $month ?>:</strong> <?= $sum ?><br>
                     <?php
                 }
             }

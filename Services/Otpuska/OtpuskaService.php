@@ -9,7 +9,7 @@ class OtpuskaService implements OtpuskaServiceInterface
 {
     private $otpuskaRepository;
     private $userRepository;
-    public function __construct(OtpuskaRepositoryInterface $otpuskaService, UserRepositoryInterface $userRepository)
+    public function __construct(OtpuskaRepositoryInterface $otpuskaService, UserRepositoryInterface $userRepository )
     {
         $this->otpuskaRepository = $otpuskaService;
         $this->userRepository = $userRepository;
@@ -18,16 +18,26 @@ class OtpuskaService implements OtpuskaServiceInterface
     {
         $user = $this->userRepository->getById($id);
         $userId = $user->getId();
+        $existingOtpusk = $this->otpuskaRepository->getByUserIdAndYear($userId, $date);
+
+        if ($existingOtpusk) {
+            throw new OtpuskaCreateException("User already has otpusk for this year");
+        }
 
         if (!is_numeric($otpuska)) {
-            throw new OtpuskaCreateException("invalid number");
+            throw new OtpuskaCreateException("Invalid number");
         }
-        if ($otpuska > 150){
-            throw new OtpuskaCreateException("imposible otpuska");
+
+        if ($otpuska > 150) {
+            throw new OtpuskaCreateException("Impossible otpuska");
         }
-        $otpuska = $this->otpuskaRepository->create($userId,$otpuska,$date);
+
+        // Create new otpuska
+      //  $otpuska = $this->otpuskaRepository->create($userId, $otpuska, $date);
+
         return $otpuska;
     }
+
 
     public function showOtpuska(int $id): ?array
     {
@@ -68,7 +78,8 @@ class OtpuskaService implements OtpuskaServiceInterface
 
     public function deleteOtpuska(int $noteId, int $userId)
     {
-        // TODO: Implement deleteOtpuska() method.
+        $deletedNarqd = $this->otpuskaRepository->deleteOtpuska($noteId);
+        return $deletedNarqd;
     }
 
     public function editOtpuskaById(int $userId, int $id, string $text)
@@ -76,8 +87,9 @@ class OtpuskaService implements OtpuskaServiceInterface
         $user =$this->userRepository->getById($_SESSION['id']);
         $currentId = $user->getId();
         $currentNumber =(float)$text;
-
         $editNarqd = $this->otpuskaRepository->editOtpuska($id,$text);
         return $editNarqd;
     }
+
+
 }

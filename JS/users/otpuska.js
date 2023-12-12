@@ -1,21 +1,5 @@
-// Define the input fields outside the functions
-var inputCompensationId = document.createElement('input');
-inputCompensationId.type = 'hidden';
-inputCompensationId.name = 'compensationId';
-inputCompensationId.id = 'compensationId'; // Add an ID for easy access
-inputCompensationId.value = '';
-
-var inputUpdatedDays = document.createElement('input');
-inputUpdatedDays.type = 'hidden';
-inputUpdatedDays.name = 'updatedDays';
-inputUpdatedDays.id = 'updatedDays'; // Add an ID for easy access
-inputUpdatedDays.value = '';
-
-var inputYear = document.createElement('input');
-inputYear.type = 'hidden';
-inputYear.name = 'year';
-inputYear.id = 'year'; // Add an ID for easy access
-inputYear.value = '';
+// Define an array to store changes
+var changesArray = [];
 
 function changeDays(compensationId, operator, year) {
     var daysElement = document.getElementById('days-' + compensationId);
@@ -29,10 +13,12 @@ function changeDays(compensationId, operator, year) {
 
     daysElement.innerText = currentDays;
 
-    // Set values directly in the form
-    inputCompensationId.value = compensationId;
-    inputUpdatedDays.value = currentDays;
-    inputYear.value = year;
+    // Add changes to the array
+    changesArray.push({
+        compensationId: compensationId,
+        updatedDays: currentDays,
+        year: year
+    });
 }
 
 function saveChanges() {
@@ -41,19 +27,22 @@ function saveChanges() {
     form.method = 'post';
     form.action = 'editOtpusk';
 
+    // Create a hidden input field for the changes array
+    var inputChanges = document.createElement('input');
+    inputChanges.type = 'hidden';
+    inputChanges.name = 'changesArray';
+    inputChanges.value = JSON.stringify(changesArray);
+
     // Append input fields to the form
-    form.appendChild(inputCompensationId);
-    form.appendChild(inputUpdatedDays);
-    form.appendChild(inputYear);
+    form.appendChild(inputChanges);
 
     // Append the form to the document body
     document.body.appendChild(form);
 
     // Debugging: Log values to the console before form submission
     console.log('Before form submission:');
-    console.log('compensationId:', inputCompensationId.value);
-    console.log('updatedDays:', inputUpdatedDays.value);
-    console.log('year:', inputYear.value);
+    console.log('changesArray:', changesArray);
 
+    // Submit the form
     form.submit();
 }

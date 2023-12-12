@@ -387,22 +387,33 @@ class UsersController
     {
         $this->view->render();
     }
-    public function editOtpusk(UserServiceInterface $userService,OtpuskaServiceInterface $otpuskaService )
+    public function editOtpusk(UserServiceInterface $userService, OtpuskaServiceInterface $otpuskaService)
     {
-
+        var_dump("gg");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['compensationId']) && isset($_POST['updatedDays']) && isset($_POST['year'])) {
-                $otpuskaId = $_POST['compensationId'];
-                $text = $_POST['updatedDays'];
-                $users = $userService->findOne($_SESSION['id']);
-                 $usersId = $users->getId();
-              $otpuskaService->editOtpuskaById($usersId,$otpuskaId,$text);
-                header("Location: profile")
-                ;exit();
+            if (isset($_POST['changesArray'])) {
+                $changesArray = json_decode($_POST['changesArray'], true);
+
+                foreach ($changesArray as $change) {
+                    $otpuskaId = $change['compensationId'];
+                    $text = $change['updatedDays'];
+                    $days =(int)$text;
+                    $users = $userService->findOne($_SESSION['id']);
+                    $usersId = $users->getId();
+                   if ($days ==0){
+                      $otpuskaService->deleteOtpuska($otpuskaId,$usersId);
+                       header("Location: profile");
+                       exit();
+                   }
+
+                  $otpuskaService->editOtpuskaById($usersId, $otpuskaId, $text);
+                }
+                header("Location: profile");
+                exit();
             }
         }
-
     }
+
 
     public function createOtpuska(UserServiceInterface $userService , OtpuskaServiceInterface $otpuskaService)
     {
@@ -412,8 +423,8 @@ class UsersController
             $date = htmlspecialchars($_POST['date']);
             $days = htmlspecialchars($_POST['days']);
             $otpuskaService->create($id,$days,$date);
-            header("Location: profile");
-            exit();
+            //header("Location: profile");
+           // exit();
         }
     }
 }

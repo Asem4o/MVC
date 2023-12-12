@@ -7,4 +7,6 @@ interface OtpuskaServiceInterface
 
     public function deleteOtpuska(int $noteId, int $userId);
     public function editOtpuskaById(int $userId ,int $id,string $text);
+
+
 }

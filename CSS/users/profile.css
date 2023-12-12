@@ -10,9 +10,22 @@ body {
     padding: 10px;
     text-align: center;
 }
-.pic{
+.pic-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+}
+
+.pic {
+
+    width: 30px;
     text-align: left;
 }
+
+.pic-text {
+    flex: 1; /* Take up remaining space */
+    text-align: center; /* Center text horizontally */
+}
+
 .edit-link {
     display: inline-block;
     margin: 0 10px;
