@@ -17,6 +17,7 @@ use http\Client\Curl\User;
 use mysql_xdevapi\Exception;
 use Services\Narqd\NarqdServiceInterface;
 use Services\Note\NoteServiceInterface;
+use Services\Otpuska\OtpuskaServiceInterface;
 use Services\Users\UserServiceInterface;
 use ViewEngine\ViewInterface;
 use DTO\UserEditDTO;
@@ -92,7 +93,8 @@ class UsersController
     }
 
 
-    public function profile(UserServiceInterface $userService,NoteServiceInterface $noteService,NarqdServiceInterface $narqdService)
+    public function profile(UserServiceInterface $userService,NoteServiceInterface $noteService,
+                            NarqdServiceInterface $narqdService,OtpuskaServiceInterface $otpuskaService)
     {
 
         if (!isset($_SESSION['id'])) {
@@ -105,8 +107,10 @@ class UsersController
         $id =$user->getId();
         $note = $noteService->showNotes($user->getId());
         $narqd =$narqdService->showNarqd($user->getId());
+        $otpuska = $otpuskaService->showOtpuska($user->getId());
 
-        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), $user->getUrl(),$note,$narqd,null,$csrfToken);
+
+        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), $user->getUrl(),$note,$narqd,null,$csrfToken,$otpuska);
         $this->view->render($userProfile);
     }
 
@@ -379,4 +383,37 @@ class UsersController
         }
     }
 
+    public function otpuska()
+    {
+        $this->view->render();
+    }
+    public function editOtpusk(UserServiceInterface $userService,OtpuskaServiceInterface $otpuskaService )
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['compensationId']) && isset($_POST['updatedDays']) && isset($_POST['year'])) {
+                $otpuskaId = $_POST['compensationId'];
+                $text = $_POST['updatedDays'];
+                $users = $userService->findOne($_SESSION['id']);
+                 $usersId = $users->getId();
+              $otpuskaService->editOtpuskaById($usersId,$otpuskaId,$text);
+                header("Location: profile")
+                ;exit();
+            }
+        }
+
+    }
+
+    public function createOtpuska(UserServiceInterface $userService , OtpuskaServiceInterface $otpuskaService)
+    {
+        if (isset($_POST['days']) && $_POST['date']) {
+            $user = $userService->findOne($_SESSION['id']);
+            $id = $user->getId();
+            $date = htmlspecialchars($_POST['date']);
+            $days = htmlspecialchars($_POST['days']);
+            $otpuskaService->create($id,$days,$date);
+            header("Location: profile");
+            exit();
+        }
+    }
 }

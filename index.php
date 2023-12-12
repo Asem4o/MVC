@@ -8,7 +8,7 @@ spl_autoload_register(function ($class) {
 });
 
 $router = new \Routing\Router();
-require_once 'routes.php';
+//require_once 'routes.php';
 require_once 'function.php';
 $self =$_SERVER['PHP_SELF'];
 $uri =$_SERVER['REQUEST_URI'];
@@ -24,6 +24,8 @@ $app->registerDependency(
     \ViewEngine\ViewInterface::class,
     \ViewEngine\View::class
 );
+
+
 $app->registerDependency(
     \Services\Narqd\NarqdServiceInterface::class,
     \Services\Narqd\NarqdService::class
@@ -56,6 +58,14 @@ $app->registerDependency(
 $app->registerDependency(
     \Database\DatabaseInterface::class,
     \Database\PDODatabase::class
+);
+$app->registerDependency(
+    \Services\Otpuska\OtpuskaServiceInterface::class,
+    \Services\Otpuska\OtpuskaService::class
+);
+$app->registerDependency(
+    \Repositories\Otpuska\OtpuskaRepositoryInterface::class,
+    \Repositories\Otpuska\OtpuskaRepository::class
 );
 
 $app->addBean(

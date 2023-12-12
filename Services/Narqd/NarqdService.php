@@ -54,10 +54,9 @@ class NarqdService implements NarqdServiceInterface
                 echo "gg";
             }
             if (!isset($monthlySum[$formattedDate])) {
-                // If the month key doesn't exist, initialize it with the compensation hours
                 $monthlySum[$formattedDate] = $floatHours;
             } else {
-                // If the month key already exists, add the compensation hours to the existing value
+
                 $monthlySum[$formattedDate] += $floatHours;
             }
 
@@ -95,7 +94,7 @@ class NarqdService implements NarqdServiceInterface
             throw new NarqdEditException("invalid number");
         }
         if ($currentNumber> 255){
-            throw new NarqdEditException("too long text");
+            throw new NarqdEditException("imposilble compensation");
         }
         $editNarqd = $this->narqdRepository->editNarqd($id,$text);
         return $editNarqd;

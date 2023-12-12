@@ -1,7 +1,7 @@
 <?php
 /** @var \Routing\Router $router */
 $router->registerRoute(
-    'users\/(.*?)\/users',
+    'users\/(.*?)\/',
     'GET',
     function ($matches) {
         if (isset($matches[1][0])) {

@@ -50,14 +50,25 @@ class Application
         $fullControllerName = 'Controller\\' . ucfirst($this->mvcContext->getControllerName()) . 'Controller';
 
         if (!class_exists($fullControllerName)) {
-            header("Location: users/login"); // Redirect to "login" if UsersController doesn't exist
+            header("Location: /users/login");
             exit;
         }
 
+
         if (!method_exists($fullControllerName, $this->mvcContext->getActionName())) {
-            header("Location: /users/login"); // Redirect to "users/login" if the specified action doesn't exist
+
+            header("Location: /users/login");
             exit;
         }
+        $params = $this->mvcContext->getParams();
+
+        foreach ($params as $param) {
+            if (!method_exists($fullControllerName, $param)) {
+                header("Location: /users/login");
+                exit;
+            }
+        }
+
 
         $controllerInstance = $this->resolve($fullControllerName);
         $getParams = $this->mvcContext->getParams();

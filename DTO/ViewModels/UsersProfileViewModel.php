@@ -10,18 +10,7 @@ class UsersProfileViewModel
     /**
      * @return mixed
      */
-    public function getId()
-    {
-        return $this->id;
-    }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
     private $username;
 
     private $profilePictureUrl;
@@ -30,9 +19,17 @@ class UsersProfileViewModel
 
     private $noteId;
 
-    private $noteCreated;
+    private $otpuska;
 
     private $token;
+
+    /**
+     * @return mixed
+     */
+    public function getOtpuska()
+    {
+        return $this->otpuska;
+    }
 
     /**
      * @return mixed
@@ -54,6 +51,18 @@ class UsersProfileViewModel
     /**
      * @return mixed
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
     public function getError(): ?string
     {
         return $this->error;
@@ -70,7 +79,7 @@ class UsersProfileViewModel
 
 
     public function __construct($id,$username, $profilePictureUrl=null,
-                                $note =null,$noteId=null,$error=null,$token)
+                                $note =null,$noteId=null,$error=null,$token,$otpuska=null)
     {
         $this->id=$id;
         $this->username = $username;
@@ -79,6 +88,7 @@ class UsersProfileViewModel
         $this->noteId=$noteId;
         $this->error=$error;
         $this->token =$token;
+        $this->otpuska=$otpuska;
     }
 
     /**

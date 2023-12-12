@@ -16,6 +16,24 @@ class UserDTO
 
     private $compensation;
 
+    private $otpuska;
+
+    /**
+     * @return mixed
+     */
+    public function getOtpuska()
+    {
+        return $this->otpuska;
+    }
+
+    /**
+     * @param mixed $otpuska
+     */
+    public function setOtpuska($otpuska): void
+    {
+        $this->otpuska = $otpuska;
+    }
+
     /**
      * @return mixed
      */
