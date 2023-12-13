@@ -16,12 +16,17 @@ class OtpuskaService implements OtpuskaServiceInterface
     }
     public function create(int $id, string $otpuska, string $date)
     {
+
         $user = $this->userRepository->getById($id);
         $userId = $user->getId();
-        $existingOtpusk = $this->otpuskaRepository->getByUserIdAndYear($userId, $date);
+        $narqdData = $this->otpuskaRepository->getAllOtpuska($id);
 
-        if ($existingOtpusk) {
-            throw new OtpuskaCreateException("User already has otpusk for this year");
+        foreach ($narqdData as $userYearsCreated) {
+            $narqdDate = $userYearsCreated->getCreated();
+
+            if ($narqdDate == $date) {
+                throw new OtpuskaCreateException("You already have days for this year change it");
+            }
         }
 
         if (!is_numeric($otpuska)) {
@@ -33,7 +38,7 @@ class OtpuskaService implements OtpuskaServiceInterface
         }
 
         // Create new otpuska
-      //  $otpuska = $this->otpuskaRepository->create($userId, $otpuska, $date);
+        $otpuska = $this->otpuskaRepository->create($userId, $otpuska, $date);
 
         return $otpuska;
     }

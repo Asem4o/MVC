@@ -389,7 +389,6 @@ class UsersController
     }
     public function editOtpusk(UserServiceInterface $userService, OtpuskaServiceInterface $otpuskaService)
     {
-        var_dump("gg");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['changesArray'])) {
                 $changesArray = json_decode($_POST['changesArray'], true);
@@ -417,14 +416,22 @@ class UsersController
 
     public function createOtpuska(UserServiceInterface $userService , OtpuskaServiceInterface $otpuskaService)
     {
-        if (isset($_POST['days']) && $_POST['date']) {
-            $user = $userService->findOne($_SESSION['id']);
-            $id = $user->getId();
-            $date = htmlspecialchars($_POST['date']);
-            $days = htmlspecialchars($_POST['days']);
-            $otpuskaService->create($id,$days,$date);
-            //header("Location: profile");
-           // exit();
+        $csrfToken = generateCsrfToken();
+        try {
+            if (isset($_POST['days']) && $_POST['date']) {
+                $user = $userService->findOne($_SESSION['id']);
+                $id = $user->getId();
+                $date = htmlspecialchars($_POST['date']);
+                $days = htmlspecialchars($_POST['days']);
+                $otpuskaService->create($id,$days,$date);
+                header("Location: profile");
+                exit();
+            }
+        } catch (\Exception\User\OtpuskaCreateException $e){
+            $e= $e->getMessage();
+            $userRegister = new UsersProfileViewModel(null,null,null,null,null,$e,$csrfToken);
+            $this->view->render($userRegister);
         }
+
     }
 }

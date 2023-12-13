@@ -20,6 +20,15 @@ class Otpuska
         $this->otpuska = $otpuska;
     }
 
+    private $createdYear;
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedYear()
+    {
+        return $this->createdYear;
+    }
     private $created;
 
     /**

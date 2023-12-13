@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit your profile</title>
+    <title>Change picture</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">

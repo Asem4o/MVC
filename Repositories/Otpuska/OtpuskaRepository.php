@@ -6,6 +6,7 @@ namespace Repositories\Otpuska;
 
 use Database\DatabaseInterface;
 use DTO\Otpuska;
+use PDO;
 
 class OtpuskaRepository implements OtpuskaRepositoryInterface
 {
@@ -19,7 +20,7 @@ class OtpuskaRepository implements OtpuskaRepositoryInterface
 
     public function create(int $id, string $hours, string $date)
     {
-        var_dump($date);
+
         $user =$this->db->query("INSERT INTO otpuska (userId, otpuska, created) VALUES (?, ?, ?)")
             ->execute([$id, $hours, $date]);
     }
