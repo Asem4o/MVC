@@ -17,7 +17,7 @@
 
 <body>
 <div class="note">
-    <h1>Add Otpuska</h1>
+    <h1>Add Rental days</h1>
     <form method="post" action="createOtpuska" class="mb-4">
         <div class="form-group">
             <label for="date">Select Year:</label>

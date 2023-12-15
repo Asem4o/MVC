@@ -213,11 +213,14 @@ class UsersController
             exit;
         }
         try {
-            $noteID = htmlspecialchars($_POST["note_id"]);
-            $userId = htmlspecialchars($_POST['deleteId']);
+            if (isset($_POST['note_id']) && $_POST['deleteId']){
+                $noteID = htmlspecialchars($_POST["note_id"]);
+                $userId = htmlspecialchars($_POST['deleteId']);
 
-            $service->deleteNoteById($noteID,$userId);
-           header("Location: profile");
+                $service->deleteNoteById($noteID,$userId);
+                header("Location: profile");
+            }
+            header("Location: profile");
         }catch (\Exception\User\NoteDeleteException $e){
             echo $e =$e->getMessage();
             header("Refresh: 2; URL=profile");

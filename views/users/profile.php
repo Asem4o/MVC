@@ -18,27 +18,33 @@
 
         <div class="pic-container">
             <div class="pic">
-                <img width="50px" src="../<?= $model->getProfilePictureUrl(); ?>" alt="" />
+                <?php if ($model->getProfilePictureUrl() !== null): ?>
+                    <img width="50px" src="../<?= $model->getProfilePictureUrl(); ?>" alt="" />
+                <?php else: ?>
+                    <img width="100px" src="/public/images/background/military.jpg" alt="Default Image" />
+                <?php endif; ?>
             </div>
+
             <div class="pic-text">
                 Welcome, <?= $model->getUsername() ?>
             </div>
         </div>
 
-        <div class="edit-link">
-            <a href="editProfilePicture" class="btn-primary">Change Profile Picture</a>
-        </div>
-        <div class="edit-link">
-            <a href="changePassword" class="btn-primary">Change Password</a>
-        </div>
-        <div class="edit-link">
-            <a href="logout" class="btn-primary">Logout</a>
-
+        <div class="container">
+            <div class="edit-link">
+                <a href="editProfilePicture" class="btn btn-outline-primary">Change Profile Picture</a>
+            </div>
+            <div class="edit-link">
+                <a href="changePassword" class="btn btn-outline-primary">Change Password</a>
+            </div>
+            <div class="edit-link">
+                <a href="logout" class="btn btn-outline-primary">Logout</a>
+            </div>
         </div>
 
     </div>
 
-    <h1>Holiday days</h1>
+    <h1>Rental days</h1>
     <div class="otpuska">
         <?php
         $data = $model->getOtpuska();
@@ -47,7 +53,7 @@
             foreach ($data['otpuska'] as $compensation):
                 ?>
                 <div class="compensation-item">
-                    <strong>Holiday days:</strong>
+                    <strong>Rental days:</strong>
                     <span id="days-<?= $compensation['id'] ?>" class="days"><?= isset($compensation['days']) ? $compensation['days'] : 'N/A' ?></span>
                     <div class="btn-group" role="group" aria-label="Change Days">
                         <button type="button" class="btn btn-secondary btn-outline-dark" onclick="changeDays('<?= $compensation['id'] ?>', '+', '<?= $compensation['created'] ?>')">+</button>
@@ -65,7 +71,7 @@
             if (isset($data['monthlySum'])):
                 foreach ($data['monthlySum'] as $month => $sum):
                     ?>
-                    <strong>Total holiday days <?= $month ?>:</strong> <?= $sum ?><br>
+                    <strong>Total Rental days <?= $month ?>:</strong> <?= $sum ?><br>
                 <?php
                 endforeach;
             endif;
@@ -77,41 +83,8 @@
     <div class="bottons">
         <a href="note" class="btn btn-primary">Add Note</a>
         <a href="hours" class="btn btn-primary">Add compensation hours</a>
-        <a href="otpuska" class="btn btn-primary">Add holiday days</a>
+        <a href="otpuska" class="btn btn-primary">Add Rental days</a>
     </div>
-
-    <h1>Notes</h1>
-    <div class="notes">
-        <?php
-        $notes = $model->getNote();
-
-        if (!empty($notes)) {
-            foreach ($notes as $note) {
-                ?>
-                <strong>Note:</strong> <?= $note['content'] ?><br>
-                <strong>Created:</strong> <?= $note['created'] ?><br>
-
-                <form method="post" action="deleteNote" style="display: inline;">
-                    <input type="hidden" name="note_id" value="<?= $note['id'] ?>">
-                    <input type="hidden" name="deleteId" value="<?= $model->getId() ?>">
-                    <button type="submit" class="btn-danger">Delete</button>
-                </form>
-                <form method="post" action="editNote" style="display: inline;">
-                    <input type="hidden" name="noteId" value="<?= $note['id'] ?>">
-                    <input type="hidden" name="content" value="<?= $note['content'] ?>">
-                    <button type="submit"class="btn-success">Edit Note</button>
-                </form>
-
-                <br>
-                <?php
-            }
-        } else {
-            echo "No notes available."; // You can customize this message based on your requirements.
-        }
-        ?><br><br>
-
-    </div>
-
     <h1>Hours Compensation</h1>
     <div class="narqd">
         <?php
@@ -150,6 +123,39 @@
         ?><br><br>
 
     </div>
+    <h1>Notes</h1>
+    <div class="notes">
+        <?php
+        $notes = $model->getNote();
+
+        if (!empty($notes)) {
+            foreach ($notes as $note) {
+                ?>
+                <strong>Note:</strong> <?= $note['content'] ?><br>
+                <strong>Created:</strong> <?= $note['created'] ?><br>
+
+                <form method="post" action="deleteNote" style="display: inline;">
+                    <input type="hidden" name="note_id" value="<?= $note['id'] ?>">
+                    <input type="hidden" name="deleteId" value="<?= $model->getId() ?>">
+                    <button type="submit" class="btn-danger">Delete</button>
+                </form>
+                <form method="post" action="editNote" style="display: inline;">
+                    <input type="hidden" name="noteId" value="<?= $note['id'] ?>">
+                    <input type="hidden" name="content" value="<?= $note['content'] ?>">
+                    <button type="submit"class="btn-success">Edit Note</button>
+                </form>
+
+                <br>
+                <?php
+            }
+        } else {
+            echo "No notes available."; // You can customize this message based on your requirements.
+        }
+        ?><br><br>
+
+    </div>
+
+
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

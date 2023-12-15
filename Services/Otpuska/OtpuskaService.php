@@ -21,6 +21,8 @@ class OtpuskaService implements OtpuskaServiceInterface
         $userId = $user->getId();
         $narqdData = $this->otpuskaRepository->getAllOtpuska($id);
 
+        $dateTime = new DateTime();
+        $formattedDate = $dateTime->format('Y');
         foreach ($narqdData as $userYearsCreated) {
             $narqdDate = $userYearsCreated->getCreated();
 
@@ -28,16 +30,17 @@ class OtpuskaService implements OtpuskaServiceInterface
                 throw new OtpuskaCreateException("You already have days for this year change it");
             }
         }
-
+        if ($date > $formattedDate){
+            throw new OtpuskaCreateException("you cant add rental days for this year");
+        }
         if (!is_numeric($otpuska)) {
             throw new OtpuskaCreateException("Invalid number");
         }
 
         if ($otpuska > 150) {
-            throw new OtpuskaCreateException("Impossible otpuska");
+            throw new OtpuskaCreateException("Impossible rental days");
         }
 
-        // Create new otpuska
         $otpuska = $this->otpuskaRepository->create($userId, $otpuska, $date);
 
         return $otpuska;
@@ -63,18 +66,23 @@ class OtpuskaService implements OtpuskaServiceInterface
             $dateTime = new DateTime($narqdDate);
             $formattedDate = $dateTime->format('Y');
 
-            if (!is_numeric($floatHours)){
-                echo "gg";
+            if (!is_numeric($floatHours)) {
+                echo "not a number!";
             }
+
             if (!isset($monthlySum[$formattedDate])) {
                 $monthlySum[$formattedDate] = $floatHours;
             } else {
-
                 $monthlySum[$formattedDate] += $floatHours;
             }
 
             $narqds[] = ['id' => $id, 'days' => $narqdCompensation, 'created' => $narqdDate];
         }
+
+        // Custom sorting function for sorting by 'created' key
+        usort($narqds, function ($a, $b) {
+            return strtotime($a['created']) - strtotime($b['created']);
+        });
 
         ksort($monthlySum);
 
