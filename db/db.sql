@@ -22,26 +22,30 @@ USE `mvc`;
 -- Дъмп структура за таблица mvc.narqd
 CREATE TABLE IF NOT EXISTS `narqd` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `guid` varchar(50) DEFAULT NULL,
   `userId` int(11) NOT NULL,
   `compensation` varchar(250) DEFAULT NULL,
   `created` date DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `guid` (`guid`),
   KEY `FK1_Users_Id_Id` (`userId`),
   CONSTRAINT `FK1_Users_Id_Id` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
 -- Дъмп структура за таблица mvc.note
 CREATE TABLE IF NOT EXISTS `note` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `guid` varchar(50) DEFAULT NULL,
   `userId` int(11) NOT NULL,
   `note` varchar(255) DEFAULT NULL,
   `created` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `guid` (`guid`),
   KEY `FK1_UserId_` (`userId`),
   CONSTRAINT `FK1_UserId_` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=865 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=890 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
@@ -54,20 +58,22 @@ CREATE TABLE IF NOT EXISTS `otpuska` (
   PRIMARY KEY (`id`),
   KEY `FK1_id_Users_Id` (`userId`),
   CONSTRAINT `FK1_id_Users_Id` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
 -- Дъмп структура за таблица mvc.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `guid` varchar(50) DEFAULT NULL,
   `username` varchar(150) NOT NULL,
   `password` varchar(150) NOT NULL,
   `url` varchar(150) DEFAULT NULL,
   `pin` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=10170 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `guid` (`guid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10172 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
