@@ -17,10 +17,12 @@ class NarqdService implements NarqdServiceInterface
         $this->narqdRepository = $narqdRepository;
         $this->userRepository = $userRepository;
     }
-    public function create(int $id, string $narqd , string $date)
+    public function create(string $id, string $narqd , string $date)
     {
-        $user = $this->userRepository->getById($id);
+        $user = $this->userRepository->getByGuid($id);
+
         $userId = $user->getId();
+
         if (!is_numeric($narqd)) {
            throw new NarqdCreateException("invalid number");
         }
@@ -43,7 +45,7 @@ class NarqdService implements NarqdServiceInterface
         $monthlySum = [];
 
         foreach ($narqdData as $narqdObject) {
-            $id = $narqdObject->getId();
+            $id = $narqdObject->getGuid();
             $narqdCompensation = $narqdObject->getCompensation();
             $floatHours = (float) $narqdCompensation;
             $narqdDate = $narqdObject->getCreated();
@@ -69,27 +71,31 @@ class NarqdService implements NarqdServiceInterface
     }
 
 
-    public function deleteNarqdById(int $noteId, int $userId)
+    public function deleteNarqdById(string $noteId, string $userId)
     {
-        $currentUser = $this->userRepository->getById($_SESSION['id']);
+
+        $currentUser = $this->narqdRepository->getByNarqdGuid($noteId);
+        $id = $currentUser->getId();
+
         $currUserId = $currentUser->getId();
 
-        if ($currUserId !== $userId) {
+        if ($currUserId !== $id) {
             throw new NarqdDeleteException("Don't have access to this narqd!");
         }
 
-        $deletedNarqd = $this->narqdRepository->deleteNarqd($noteId);
+
+        $deletedNarqd = $this->narqdRepository->deleteNarqd($id);
         return $deletedNarqd;
     }
 
-    public function editNarqdById(int $userId, int $id, string $text)
+    public function editNarqdById(string $userId, string $guid, string $text)
     {
-        $user =$this->userRepository->getById($_SESSION['id']);
-        $currentId = $user->getId();
+        $currentUser = $this->narqdRepository->getByNarqdGuid($guid);
+
+        $id = $currentUser->getId();
+        $currUserId = $currentUser->getId();
         $currentNumber =(float)$text;
-        if ($currentId != $userId){
-            throw new NoteEditException("dont have access to this note!");
-        }
+
         if (!is_numeric($text)) {
             throw new NarqdEditException("invalid number");
         }

@@ -2,31 +2,41 @@
 
 namespace DTO\RequestsModel;
 
+
+require_once 'vendor/autoload.php';
+
+
 class UserRegistrationBidingModel
 {
+
     private $username;
 
     private $password;
 
     private $confirmPassword;
 
-    private $ipadress;
+
+    private $guid;
 
     /**
      * @return mixed
      */
-    public function getIpadress()
+    /**
+     * @return mixed
+     */
+    public function getGuid()
     {
-        return $this->ipadress;
+        return \Ramsey\Uuid\Uuid::uuid4()->toString() ?? $this->guid;
     }
 
     /**
-     * @param mixed $ipadress
+     * @param mixed $guid
      */
-    public function setIpadress($ipadress): void
+    public function setGuid($guid): void
     {
-        $this->ipadress = $ipadress;
+        $this->guid = $guid;
     }
+
     private $pin;
     private $error;
 
@@ -95,10 +105,6 @@ class UserRegistrationBidingModel
     }
 
 
-
-    /**
-     * @return mixed
-     */
     public function getUsername()
     {
 

@@ -9,8 +9,8 @@ interface NoteServiceInterface
     public function create(int $id ,string $note);
     public function showNotes(int $id): ?array;
 
-    public function deleteNoteById(int $noteId, int $userId);
-    public function editNoteById(int $userId ,int $id,string $text);
+    public function deleteNoteById(string $noteId, string $userId);
+    public function editNoteById(string $userId ,int $id,string $text);
 
 
 

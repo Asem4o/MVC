@@ -2,12 +2,30 @@
 namespace DTO;
 
 
+require_once 'vendor/autoload.php';
 
 class Narqd
 {
     private $id;
 
+    private $createguid;
 
+    /**
+     * @return mixed
+     */
+    public function getCreatedGuid()
+    {
+        return \Ramsey\Uuid\Uuid::uuid4()->toString() ?? $this->guid;
+    }
+    private $guid;
+
+    /**
+     * @return mixed
+     */
+    public function getGuid()
+    {
+        return $this->guid;
+    }
     private  $compensation = [];
 
     public function getCompensation()

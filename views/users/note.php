@@ -18,7 +18,9 @@
     <h1>Add Note</h1>
     <form method="post" action="createNote" class="mb-4">
         <div class="form-group">
+
             <label for="note">Note:</label>
+
             <textarea id="note" name="note" class="form-control" rows="4"></textarea>
         </div>
 

@@ -1,7 +1,7 @@
 <?php
 namespace DTO;
 
-
+require_once 'vendor/autoload.php';
 
 class Note
 {
@@ -12,9 +12,30 @@ class Note
 
     private $created;
 
+    private $guid;
+
+    private $createGuid;
+
     /**
      * @return mixed
      */
+    public function getCreateGuid()
+    {
+        return \Ramsey\Uuid\Uuid::uuid4()->toString() ?? $this->guid;
+    }
+    public function getGuid()
+    {
+        return $this->guid;
+
+    }
+
+    /**
+     * @param mixed $guid
+     */
+    public function setGuid($guid): void
+    {
+        $this->guid = $guid;
+    }
     public function getCreated()
     {
         return $this->created;

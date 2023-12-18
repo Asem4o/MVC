@@ -23,8 +23,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function register(UserRegistrationBidingModel $model)
     {
-        $this->db->query("INSERT INTO users (username, password, pin) values (?,?,?)")
-            ->execute([$model->getUsername(),$model->getPassword(),$model->getPin()]);
+
+        $this->db->query("INSERT INTO users (guid, username, password, pin) values (?,?,?,?)")
+          ->execute([$model->getGuid(),$model->getUsername(),$model->getPassword(),$model->getPin()]);
     }
 
     public function getByUsername(string $username): ?UserDTO
@@ -76,5 +77,12 @@ class UserRepository implements UserRepositoryInterface
         $params[] = $id;
 
         $this->db->query($query)->execute($params);
+    }
+
+    public function getByGuid(string $userId)
+    {
+
+        return $this->db->query("SELECT * FROM users WHERE guid = ?")->execute([$userId])->fetch(UserDTO::class);
+
     }
 }

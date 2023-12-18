@@ -20,5 +20,7 @@ interface UserRepositoryInterface
 
     public function setPictureUrl(int $id, string $filePath);
 
+    public function getByGuid(string $userId);
+
 
 }

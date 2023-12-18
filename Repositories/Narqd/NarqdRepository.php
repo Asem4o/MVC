@@ -20,15 +20,16 @@ class NarqdRepository implements NarqdRepositoryInterface
 
     public function create(int $userId, string $hours ,string $date)
     {
-
-        $user =$this->db->query("INSERT INTO narqd (userId, compensation, created) VALUES (?, ?, ?)")
-            ->execute([$userId, $hours,$date]);
+        $narqd = new Narqd();
+        $guidGenerate = $narqd->getCreatedGuid();
+        $user =$this->db->query("INSERT INTO narqd (guid,userId, compensation, created) VALUES (?,?, ?, ?)")
+            ->execute([$guidGenerate,$userId, $hours,$date]);
 
     }
 
     public function getAllNarqds(int $id): ?array
     {
-        $query = "SELECT narqd.id, narqd.compensation,narqd.created FROM narqd INNER JOIN users ON narqd.userId = users.id WHERE users.id = ?";
+        $query = "SELECT narqd.id,narqd.guid, narqd.compensation,narqd.created FROM narqd INNER JOIN users ON narqd.userId = users.id WHERE users.id = ?";
 
         $all = $this->db->query($query)->execute([$id])->fetchAll(\DTO\Narqd::class);
 
@@ -46,5 +47,10 @@ class NarqdRepository implements NarqdRepositoryInterface
     {
         $query = "UPDATE narqd SET compensation = ? WHERE id = ?";
         $result = $this->db->query($query)->execute([$text, $id]);
+    }
+
+    public function getByNarqdGuid(string $userId)
+    {
+        return $this->db->query("SELECT * FROM narqd WHERE guid = ?")->execute([$userId])->fetch(Narqd::class);
     }
 }

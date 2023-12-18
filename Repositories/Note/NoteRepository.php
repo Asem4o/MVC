@@ -21,9 +21,11 @@ class NoteRepository implements NoteRepositoryInterface
 
     public function create(int $userId, string $noteContent)
     {
+        $note = new Note();
+        $createGuid = $note->getCreateGuid();
         $currentTimestamp = date('Y-m-d H:i:s');
-        $user =$this->db->query("INSERT INTO note (userId, note, created) VALUES (?, ?, ?)")
-            ->execute([$userId, $noteContent,$currentTimestamp]);
+        $user =$this->db->query("INSERT INTO note (guid,userId, note, created) VALUES (?,?, ?, ?)")
+            ->execute([$createGuid,$userId, $noteContent,$currentTimestamp]);
 
     }
 
@@ -32,7 +34,7 @@ class NoteRepository implements NoteRepositoryInterface
     public function getAllNotes(int $userId): ?array
     {
 
-        $query = "SELECT note.id, note.note,note.created FROM note INNER JOIN users ON note.userId = users.id WHERE users.id = ?";
+        $query = "SELECT note.id, note.guid, note.note,note.created FROM note INNER JOIN users ON note.userId = users.id WHERE users.id = ?";
 
         $all = $this->db->query($query)->execute([$userId])->fetchAll(\DTO\Note::class);
 
@@ -50,6 +52,12 @@ class NoteRepository implements NoteRepositoryInterface
     {
         $query = "UPDATE note SET note = ? WHERE id = ?";
         $result = $this->db->query($query)->execute([$text, $id]);
+
+    }
+    public function getByNoteGuid(string $userId)
+    {
+
+        return $this->db->query("SELECT * FROM note WHERE guid = ?")->execute([$userId])->fetch(Note::class);
 
     }
 

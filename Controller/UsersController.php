@@ -52,8 +52,8 @@ class UsersController
             if ($userService->verifyCredentials($model->getUsername(), $model->getPassword())) {
 
                 $_SESSION['id'] = $userService->findByUsername($model->getUsername())->getId();
-                header("Location: profile");
-                exit;
+                 header("Location: profile");
+                 exit;
             }
         } catch (\Exception\User\LoginException $e) {
           $e= $e->getMessage();
@@ -63,20 +63,19 @@ class UsersController
 
     }
 
-    public function register()
+    public function register(UserRegistrationBidingModel $bidingModel)
     {
 
 
         $csrfToken = generateCsrfToken();
-
-        $userRegister = new UsersProfileViewModel(null, null, null, null, null, null, $csrfToken);
-        $this->view->render($userRegister);
+        $guid = $bidingModel->getGuid();
+         $userRegister = new UsersProfileViewModel(null, null, null, null, null, $csrfToken,$guid);
+         $this->view->render($userRegister);
 
     }
 
     public function registerProcess(UserRegistrationBidingModel $bidingModel, UserServiceInterface $userService)
     {
-
 
 
         $csrfToken = generateCsrfToken();
@@ -86,33 +85,34 @@ class UsersController
           header("Location: login");
         } catch (\Exception\User\RegistrationException $e) {
             $errorMessage = $e->getMessage();
-            $userRegister = new UsersProfileViewModel(null, null, null, null, null, $errorMessage,$csrfToken);
+            $userRegister = new UsersProfileViewModel(null , null, null, null, $errorMessage,$csrfToken);
             $this->view->render($userRegister);
 
         }
     }
 
 
-    public function profile(UserServiceInterface $userService,NoteServiceInterface $noteService,
-                            NarqdServiceInterface $narqdService,OtpuskaServiceInterface $otpuskaService)
+    public function profile(UserServiceInterface $userService, NoteServiceInterface $noteService,
+                            NarqdServiceInterface $narqdService, OtpuskaServiceInterface $otpuskaService)
     {
-
         if (!isset($_SESSION['id'])) {
             header("Location: login");
             exit;
         }
+
         $csrfToken = generateCsrfToken();
 
         $user = $userService->findOne($_SESSION['id']);
-        $id =$user->getId();
+        $id = $user->getGuid();
+
         $note = $noteService->showNotes($user->getId());
-        $narqd =$narqdService->showNarqd($user->getId());
+        $narqd = $narqdService->showNarqd($user->getId());
         $otpuska = $otpuskaService->showOtpuska($user->getId());
 
-
-        $userProfile = new UsersProfileViewModel($id,$user->getUsername(), $user->getUrl(),$note,$narqd,null,$csrfToken,$otpuska);
+        $userProfile = new UsersProfileViewModel($id, $user->getUsername(), $user->getUrl(), $note, $narqd, null, $csrfToken, $otpuska);
         $this->view->render($userProfile);
     }
+
 
 
     public function editProfilePicture()
@@ -181,11 +181,12 @@ class UsersController
         }
 
     }
-    public function note(){
+    public function note(NoteServiceInterface $noteService){
         if (!isset($_SESSION['id'])) {
             header("Location: login");
             exit;
         }
+
         $this->view->render();
     }
     public function createNote(UserServiceInterface $userService , NoteServiceInterface $service){
@@ -216,7 +217,6 @@ class UsersController
             if (isset($_POST['note_id']) && $_POST['deleteId']){
                 $noteID = htmlspecialchars($_POST["note_id"]);
                 $userId = htmlspecialchars($_POST['deleteId']);
-
                 $service->deleteNoteById($noteID,$userId);
                 header("Location: profile");
             }
@@ -230,10 +230,9 @@ class UsersController
     public function editNote(UserServiceInterface $userService) {
         if (isset($_POST['noteId']) && $_POST['content']) {
             $noteId = htmlspecialchars($_POST['noteId']);
-            $noteId = (int) $noteId;
             $firstNoteContent = htmlspecialchars($_POST['content']);
             $user = $userService->findOne($_SESSION['id']);
-            $id = $user->getId();
+            $id = $user->getGuid();
             $csrfToken = generateCsrfToken();
             $userProfile = new UsersProfileViewModel($id, $user->getUsername(), null, $firstNoteContent, $noteId,null,$csrfToken);
             $this->view->render($userProfile);
@@ -250,22 +249,22 @@ class UsersController
         try {
             if (isset($_POST['userId']) && $_POST['noteId']) {
                 $user = $userService->findOne($_SESSION['id']);
-                $userId = htmlspecialchars((int) $_POST['userId']);
-                $noteId = htmlspecialchars((int) $_POST['noteId']);
+                $userId = htmlspecialchars($_POST['userId']);
+                $noteId = htmlspecialchars($_POST['noteId']);
                 $content = htmlspecialchars($_POST['note']);
                 $service->editNoteById($userId, $noteId, $content);
                 header("Location: profile");
-                exit();
+             exit();
             }else{
-                header('Location: login');
+               header('Location: login');
                 exit();
             }
 
         } catch (\Exception\User\NoteEditException $e) {
 
             echo $e = $e->getMessage();
-            header("Refresh: 1; URL=profile");
-            exit;
+           header("Refresh: 1; URL=profile");
+           exit;
         }
     }
     public function reset(){
@@ -303,17 +302,17 @@ class UsersController
         try {
             if (isset($_POST['date']) && $_POST['hours']){
                 $user = $userService->findOne($_SESSION['id']);
-                $id = $user->getId();
+                $id = $user->getGuid();
                 $date =htmlspecialchars($_POST['date']);
                 $dateTime = new DateTime($date);
                 $formattedDate = $dateTime->format('Y-m-d');
                 $hours =htmlspecialchars($_POST['hours']);
 
                 $service->create($id,$hours,$formattedDate);
-                header("Location: profile");
+               header("Location: profile");
             }else{
                 header("Location: login");
-                exit();
+               exit();
             }
 
         } catch (\Exception\User\NarqdCreateException $e){
@@ -330,7 +329,8 @@ class UsersController
                 $narqdId =htmlspecialchars($_POST['narqdId']);
                 $userId =htmlspecialchars($_POST['deleteId']);
                 $narqdService->deleteNarqdById($narqdId,$userId);
-                header("Location: profile");
+
+             header("Location: profile");
             }else{
                 header('Location: login');
                 exit();
@@ -347,13 +347,12 @@ class UsersController
 
         if (isset($_POST['narqdId']) && $_POST['content']) {
             $narqdId = htmlspecialchars($_POST['narqdId']);
-            $noteId = (int) $narqdId;
             $firstNoteContent = htmlspecialchars($_POST['content']);
             $user = $userService->findOne($_SESSION['id']);
             $csrfToken = generateCsrfToken();
-            $id = $user->getId();
+            $id = $user->getGuid();
             $userProfile = new UsersProfileViewModel($id, $user->getUsername(), null,
-                $firstNoteContent, $noteId,null,$csrfToken);
+                $firstNoteContent, $narqdId,null,$csrfToken);
             $this->view->render($userProfile);
         } else {
             header('Location: login');
@@ -366,13 +365,11 @@ class UsersController
             if (isset($_POST['narqdId'])){
                 $user = $userService->findOne($_SESSION['id']);
                 $id =$user->getId();
-                $narqdUserId = htmlspecialchars((int)$_POST['narqdId']);
-
+                $narqdUserId = htmlspecialchars($_POST['narqdId']);
 
                 $content =htmlspecialchars($_POST['note']);
-
                 $narqdService->editNarqdById($id, $narqdUserId, $content);
-                header("Location: profile");exit();
+               header("Location: profile");exit();
             }else{
                 header('Location: login');
                 exit();

@@ -13,7 +13,7 @@ interface NoteRepositoryInterface
     public function getAllNotes (int $id): ?array;
     public function deleteNote (int $id);
     public function editNote (int $id,string $text);
-
+    public function getByNoteGuid(string $userId);
 
 
 }

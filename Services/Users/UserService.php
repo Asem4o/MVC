@@ -34,6 +34,8 @@ class UserService implements UserServiceInterface
 
     public function register(UserRegistrationBidingModel $userDTO)
     {
+
+
         if ($userDTO->getPassword() != $userDTO->getConfirmPassword()) {
             throw new RegistrationException("Password mismatch");
         }
@@ -50,7 +52,6 @@ class UserService implements UserServiceInterface
 
         $passwordHash = password_hash($userDTO->getPassword(), PASSWORD_ARGON2I);
         $userDTO->setPassword($passwordHash);
-
 
         $this->userRepository->register($userDTO);
     }

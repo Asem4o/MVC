@@ -31,6 +31,7 @@
         <br/>
 
         <input type="hidden" name="csrfToken" value="<?= $model->getToken() ?>">
+        <input type="hidden" name="guid" value="<?= $model->getGuid() ?>">
 
         <input type="submit" name="register" value="Register!">
     </form>

@@ -48,9 +48,7 @@ class NoteService implements NoteServiceInterface
 
         foreach ($notesData as $noteObject) {
 
-            $id = $noteObject->getId();
-
-
+            $id = $noteObject->getGuid();
             $noteContentObject = $noteObject->getNote();
 
             $noteDate = $noteObject->getCreated();
@@ -59,32 +57,33 @@ class NoteService implements NoteServiceInterface
         return $notes;
     }
 
-    public function deleteNoteById(int $noteId, int $userID)
+    public function deleteNoteById(string $noteId, string $userID)
     {
-        $currentUser = $this->userRepository->getById($_SESSION['id']);
+        $currentUser = $this->noteRepository->getByNoteGuid($noteId);
+        $id = $currentUser->getId();
         $currUserId = $currentUser->getId();
 
-        if ($currUserId !== $userID) {
+        if ($currUserId !== $id) {
             throw new NoteDeleteException("Don't have access to this note!");
         }
 
-        $deletedNoteId = $this->noteRepository->deleteNote($noteId);
+        $deletedNoteId = $this->noteRepository->deleteNote($id);
         return $deletedNoteId;
     }
 
 
 
-    public function editNoteById(int $userId,$noteId,string $text)
+    public function editNoteById(string $userId,$noteId,string $text)
     {
-        $user =$this->userRepository->getById($_SESSION['id']);
-        $currentId = $user->getId();
-        if ($currentId != $userId){
-            throw new NoteEditException("dont have access to this note!");
-        }
+        $currentUser = $this->noteRepository->getByNoteGuid($noteId);
+        $id = $currentUser->getId();
+        $currUserId = $currentUser->getId();
+
+
         if (strlen($text) > 255){
             throw new NoteEditException("too long text");
         }
-        $editNote = $this->noteRepository->editNote($noteId,$text);
+         $editNote = $this->noteRepository->editNote($id,$text);
         return $editNote;
     }
 

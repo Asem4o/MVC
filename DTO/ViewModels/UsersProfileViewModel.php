@@ -11,6 +11,23 @@ class UsersProfileViewModel
      * @return mixed
      */
 
+    private $guid;
+
+    /**
+     * @return mixed
+     */
+    public function getGuid()
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param mixed $guid
+     */
+    public function setGuid($guid): void
+    {
+        $this->guid = $guid;
+    }
     private $username;
 
     private $profilePictureUrl;
@@ -79,9 +96,10 @@ class UsersProfileViewModel
 
 
     public function __construct($id,$username, $profilePictureUrl=null,
-                                $note =null,$noteId=null,$error=null,$token,$otpuska=null)
+                                $note =null,$noteId=null,$error=null,$token,$otpuska=null,$guid= null)
     {
         $this->id=$id;
+
         $this->username = $username;
         $this->profilePictureUrl = $profilePictureUrl;
         $this->note=$note;
@@ -89,6 +107,7 @@ class UsersProfileViewModel
         $this->error=$error;
         $this->token =$token;
         $this->otpuska=$otpuska;
+        $this->guid=$guid;
     }
 
     /**

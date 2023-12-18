@@ -1,6 +1,10 @@
 <?php
 namespace DTO;
 
+require_once 'vendor/autoload.php';
+
+
+
 class UserDTO
 {
     private $id;
@@ -18,9 +22,23 @@ class UserDTO
 
     private $otpuska;
 
+    private $guid;
+
     /**
      * @return mixed
      */
+    public function getGuid()
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param mixed $guid
+     */
+    public function setGuid($guid): void
+    {
+        $this->guid = $guid;
+    }
     public function getOtpuska()
     {
         return $this->otpuska;
@@ -107,6 +125,10 @@ class UserDTO
 
     public function getId()
     {
+        if (!$this->id) {
+            $this->id = Uuid::uuid4()->toString();
+        }
+
         return $this->id;
     }
 
