@@ -67,7 +67,14 @@ $app->registerDependency(
     \Repositories\Otpuska\OtpuskaRepositoryInterface::class,
     \Repositories\Otpuska\OtpuskaRepository::class
 );
-
+$app->registerDependency(
+    \Repositories\Chat\ChatRepositoryInterface::class,
+    \Repositories\Chat\ChatRepository::class
+);
+$app->registerDependency(
+    \Services\Chat\ChatServiceInterface::class,
+    \Services\Chat\ChatService::class
+);
 $app->addBean(
     \Database\DatabaseInterface::class,
     new Database\PDODatabase(new PDO("mysql:dbname=MVC;host=localhost", "root", ""))

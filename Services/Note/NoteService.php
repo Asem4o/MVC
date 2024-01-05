@@ -77,7 +77,6 @@ class NoteService implements NoteServiceInterface
     {
         $currentUser = $this->noteRepository->getByNoteGuid($noteId);
         $id = $currentUser->getId();
-        $currUserId = $currentUser->getId();
 
 
         if (strlen($text) > 255){

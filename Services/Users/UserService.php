@@ -157,4 +157,12 @@ class UserService implements UserServiceInterface
 
     }
 
+    public function allUsers(): array
+    {
+
+     $allusers = $this->userRepository->allUsers();
+     return $allusers;
+    }
+
+
 }

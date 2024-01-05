@@ -28,6 +28,9 @@ class DatabaseStatement implements DatabaseStatementInterface
     }
     public function fetchAll($className)
     {
+        // Ensure $className is a string
+        $className = (string) $className;
+
         $res = $this->pdoStmt->fetchAll(\PDO::FETCH_CLASS, $className);
 
         if ($res) {
@@ -36,6 +39,7 @@ class DatabaseStatement implements DatabaseStatementInterface
 
         return [];
     }
+
 
 
 

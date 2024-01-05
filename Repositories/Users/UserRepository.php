@@ -3,6 +3,7 @@
 namespace Repositories\Users;
 
 use Database\DatabaseInterface;
+use DTO\AllUsers;
 use DTO\RequestsModel\UserRegistrationBidingModel;
 use DTO\UserDTO;
 use DTO\UserEditDTO;
@@ -85,4 +86,24 @@ class UserRepository implements UserRepositoryInterface
         return $this->db->query("SELECT * FROM users WHERE guid = ?")->execute([$userId])->fetch(UserDTO::class);
 
     }
+
+    public function allUsers()
+    {
+       $allUsers = $this->db->query("SELECT username, guid FROM users")->execute()->fetchAll(UserDTO::class);
+        $users = [];
+        foreach ($allUsers as $userDTO) {
+            $username = $userDTO->getUsername();
+            $guid = $userDTO->getGuid();
+            $users[] = [
+                'username' => $username,
+                'guid' => $guid,
+            ];
+        }
+
+        return $users;
+    }
+
+
+
+
 }

@@ -40,9 +40,16 @@ class UsersProfileViewModel
 
     private $token;
 
+
+    private $isRead;
+
     /**
      * @return mixed
      */
+    public function getIsRead()
+    {
+        return $this->isRead;
+    }
     public function getOtpuska()
     {
         return $this->otpuska;
@@ -86,9 +93,6 @@ class UsersProfileViewModel
     }
 
 
-    /**
-     * @return mixed
-     */
     public function getNarqdId()
     {
         return $this->narqdId;
@@ -96,7 +100,7 @@ class UsersProfileViewModel
 
 
     public function __construct($id,$username, $profilePictureUrl=null,
-                                $note =null,$noteId=null,$error=null,$token,$otpuska=null,$guid= null)
+                                $note =null,$noteId=null,$error=null,$token,$otpuska=null,$guid= null,$isRead = null)
     {
         $this->id=$id;
 
@@ -108,6 +112,7 @@ class UsersProfileViewModel
         $this->token =$token;
         $this->otpuska=$otpuska;
         $this->guid=$guid;
+        $this->isRead=$isRead;
     }
 
     /**
@@ -143,4 +148,3 @@ class UsersProfileViewModel
     }
 
 }
-

@@ -8,17 +8,18 @@ use DTO\NoteEdit;
 use DTO\RequestsModel\UserRegistrationBidingModel;
 use DTO\UserDTO;
 use DTO\UserEditPinDTO;
+use DTO\ViewModels\ChatProfileViewModel;
 use DTO\ViewModels\UsersLoginViewModel;
 use DTO\ViewModels\UsersProfileEditViewModel;
 use DTO\ViewModels\UsersProfileViewModel;
 use Exception\User\EditProfileException;
 use Exception\User\LoginException;
-use http\Client\Curl\User;
-use mysql_xdevapi\Exception;
+use Repositories\Chat\ChatRepositoryInterface;
 use Services\Narqd\NarqdServiceInterface;
 use Services\Note\NoteServiceInterface;
 use Services\Otpuska\OtpuskaServiceInterface;
 use Services\Users\UserServiceInterface;
+use Services\Chat\ChatServiceInterface;
 use ViewEngine\ViewInterface;
 use DTO\UserEditDTO;
 class UsersController
@@ -69,7 +70,7 @@ class UsersController
 
         $csrfToken = generateCsrfToken();
         $guid = $bidingModel->getGuid();
-         $userRegister = new UsersProfileViewModel(null, null, null, null, null, $csrfToken,$guid);
+         $userRegister = new UsersProfileViewModel(null, null, null, null, null, $csrfToken,$guid,null);
          $this->view->render($userRegister);
 
     }
@@ -85,7 +86,7 @@ class UsersController
           header("Location: login");
         } catch (\Exception\User\RegistrationException $e) {
             $errorMessage = $e->getMessage();
-            $userRegister = new UsersProfileViewModel(null , null, null, null, $errorMessage,$csrfToken);
+            $userRegister = new UsersProfileViewModel(null, null,null,null,null,$errorMessage,$csrfToken,null,null);
             $this->view->render($userRegister);
 
         }
@@ -93,23 +94,27 @@ class UsersController
 
 
     public function profile(UserServiceInterface $userService, NoteServiceInterface $noteService,
-                            NarqdServiceInterface $narqdService, OtpuskaServiceInterface $otpuskaService)
+                            NarqdServiceInterface $narqdService, OtpuskaServiceInterface $otpuskaService,ChatServiceInterface $chatService)
     {
         if (!isset($_SESSION['id'])) {
             header("Location: login");
             exit;
         }
 
+        $allUsers = new UserDTO();
+
         $csrfToken = generateCsrfToken();
 
         $user = $userService->findOne($_SESSION['id']);
         $id = $user->getGuid();
-
         $note = $noteService->showNotes($user->getId());
         $narqd = $narqdService->showNarqd($user->getId());
         $otpuska = $otpuskaService->showOtpuska($user->getId());
-
-        $userProfile = new UsersProfileViewModel($id, $user->getUsername(), $user->getUrl(), $note, $narqd, null, $csrfToken, $otpuska);
+        $sender = $chatService->DisplayUsers($user->getId());
+         $allUsers->setIsRead($sender);
+        $stateUser = $allUsers->getIsRead();
+        $userProfile = new UsersProfileViewModel($id, $user->getUsername(), $user->getUrl(), $note, $narqd, null, $csrfToken, $otpuska, null,$stateUser);
+       
         $this->view->render($userProfile);
     }
 
@@ -248,7 +253,6 @@ class UsersController
     {
         try {
             if (isset($_POST['userId']) && $_POST['noteId']) {
-                $user = $userService->findOne($_SESSION['id']);
                 $userId = htmlspecialchars($_POST['userId']);
                 $noteId = htmlspecialchars($_POST['noteId']);
                 $content = htmlspecialchars($_POST['note']);
@@ -434,4 +438,46 @@ class UsersController
         }
 
     }
+    public function chat(UserServiceInterface  $userService, ChatServiceInterface $chatService)
+    {
+       $allUsers = $userService->allUsers();
+       $currentUser = $_SESSION['id'];
+        $isRead = $chatService->DisplayUsers($currentUser);
+        $newMessageUsers = $chatService->getSendr($currentUser);
+        $currUsername = $userService->findOne($currentUser);
+         $name = $currUsername->getUsername();
+
+        $showAllUsers = new ChatProfileViewModel($name,null,$allUsers,null,$isRead,$newMessageUsers );
+
+      $this->view->render($showAllUsers);
+    }
+
+
+    public function send(ChatServiceInterface $chatService, UserServiceInterface $userService)
+    {
+
+        try {
+            $username = $_POST['username'];
+            $receivedGuid = $_POST['guid'];
+            $content = $_POST['content'];
+            $sender = $_SESSION['id'];
+
+            $newMessageUsers = $chatService->getSendr($sender);
+            $chatService->createMessage($sender, $receivedGuid, $content);
+            $receivedMessages = $chatService->getMessagesBetweenUsers($sender, $receivedGuid);
+            $allUsers = $userService->allUsers();
+            $sendMessage = new ChatProfileViewModel($username, $receivedMessages, $allUsers,null ,$newMessageUsers );
+
+             $this->view->render($sendMessage);
+
+        } catch (\Exception\User\ChatException $e) {
+           $allUsers = $userService->allUsers();
+           $e = $e->getMessage();
+           $sendMessage = new ChatProfileViewModel(null, null, $allUsers, $e,);
+           $this->view->render($sendMessage);
+        }
+
+    }
+
+
 }

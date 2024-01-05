@@ -22,5 +22,7 @@ interface UserRepositoryInterface
 
     public function getByGuid(string $userId);
 
+    public function allUsers();
+
 
 }

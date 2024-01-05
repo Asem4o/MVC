@@ -31,6 +31,7 @@
         </div>
 
         <div class="container">
+
             <div class="edit-link">
                 <a href="editProfilePicture" class="btn btn-outline-primary">Change Profile Picture</a>
             </div>
@@ -40,6 +41,14 @@
             <div class="edit-link">
                 <a href="logout" class="btn btn-outline-primary">Logout</a>
             </div>
+            <div class="edit-link">
+                <?php if ($model->getIsRead() === 0): ?>
+                    <a href="chat" class="btn btn-outline-danger">Chat</a>
+                <?php else: ?>
+                    <a href="chat" class="btn btn-outline-primary">Chat</a>
+                <?php endif; ?>
+            </div>
+
         </div>
 
     </div>
@@ -76,7 +85,7 @@
                 endforeach;
             endif;
         else:
-            echo "No otpuska available.";
+            echo "No rental days";
         endif;
         ?><br><br>
     </div><br>
@@ -85,6 +94,7 @@
         <a href="hours" class="btn btn-primary">Add compensation hours</a>
         <a href="otpuska" class="btn btn-primary">Add Rental days</a>
     </div>
+
     <h1>Hours Compensation</h1>
     <div class="narqd">
         <?php
@@ -118,7 +128,7 @@
             }
 
         } else {
-            echo "No compensation available.";
+            echo "No compensation.";
         }
         ?><br><br>
 
@@ -149,7 +159,7 @@
                 <?php
             }
         } else {
-            echo "No notes available."; // You can customize this message based on your requirements.
+            echo "No notes available.";
         }
         ?><br><br>
 

@@ -93,7 +93,6 @@ class NarqdService implements NarqdServiceInterface
         $currentUser = $this->narqdRepository->getByNarqdGuid($guid);
 
         $id = $currentUser->getId();
-        $currUserId = $currentUser->getId();
         $currentNumber =(float)$text;
 
         if (!is_numeric($text)) {

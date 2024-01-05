@@ -27,14 +27,8 @@ interface UserServiceInterface
 
     public function findOne(int $id): UserDTO;
 
-    /**
-     * @param int $id
-     * @param string $tempName
-     * @param string $type
-     * @param int $size
-     * @throws UploadException
-     * @return mixed
-     */
     public function setProfilePicture(int $id, string $tempName, string $type, int $size);
+
+    public function allUsers(): array;
 
 }

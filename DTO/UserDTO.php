@@ -15,18 +15,44 @@ class UserDTO
 
     private $confirmPassword;
 
+
     private $url;
     private  $note;
 
+    private $isRead;
+
+    /**
+     * @param mixed $isRead
+     */
+    public function setIsRead($isRead): void
+    {
+        $this->isRead = $isRead;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsRead()
+    {
+        return $this->isRead;
+    }
     private $compensation;
 
     private $otpuska;
 
     private $guid;
 
+    private $newMessages;
+
     /**
      * @return mixed
      */
+    public function getNewMessages()
+    {
+        return $this->newMessages;
+    }
+
+
     public function getGuid()
     {
         return $this->guid;
