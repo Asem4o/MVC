@@ -1,0 +1,29 @@
+body {
+    background-image: url('/public/images/background/background.jpg');
+    padding: 20px;
+    margin: 0; /* Remove default margin */
+    background-color: lightslategrey;
+}
+
+.note {
+    background-color: lightslategrey;
+    padding: 20px; /* Add padding to the .note box */
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+label {
+    margin-top: 10px;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resize only */
+    min-height: 100px;
+}
+
+h1 {
+    text-align: center;
+}

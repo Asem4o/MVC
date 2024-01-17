@@ -1,0 +1,58 @@
+body {
+    margin-top: 20px;
+    background-color: beige;
+}
+
+.chat-online {
+    color: #34ce57;
+}
+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group-item.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Style for received messages */
+.received-message {
+    color: red;
+}
+
+.chat-offline {
+    color: #e4606d;
+}
+
+.chat-messages {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.chat-message {
+    margin-bottom: 15px;
+}
+
+.chat-message img {
+    border-radius: 50%;
+}
+
+.chat-message-left {
+    text-align: left;
+}
+
+.chat-message-right {
+    text-align: right;
+}
+
+.input-group {
+    margin-top: 15px;
+}
+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group-item.active {
+    background-color: #007bff;
+    color: #fff;
+}

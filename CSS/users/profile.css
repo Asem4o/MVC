@@ -1,0 +1,78 @@
+body {
+    background-color: beige;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.edit {
+    background-color: grey;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid black; /* Adjust the values as needed */
+}
+
+.pic-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+}
+
+.pic {
+
+    width: 30px;
+    text-align: left;
+}
+
+.pic-text {
+    flex: 1; /* Take up remaining space */
+    text-align: center; /* Center text horizontally */
+}
+
+.edit-link {
+    display: inline-block;
+    margin: 0 10px;
+}
+.otpuska{
+    background-color: lightslategrey;
+    text-align: center;
+}
+.edit a {
+    text-decoration: none;
+    color: #fff;
+
+}
+
+.edit a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 10px; /* Adjust the margin-top as needed for vertical centering */
+}
+h2 {
+    text-align: center;
+    margin-top: 2px; /* Adjust the margin-top as needed for vertical centering */
+}
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: lightslategrey;
+    padding: 20px;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.notes{
+    background-color: lightslategrey;
+    text-align: center;
+    margin-top: 2px;
+}
+.narqd{
+    background-color: lightslategrey;
+    text-align: center;
+    margin-top: 2px;
+}
+.bottons{
+    text-align: center;
+}
+

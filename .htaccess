@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Exclude public/images directory from rewrite
+    RewriteRule ^public/images/ - [L]
+
+
+    RewriteRule ^CSS/users/ - [L]
+
+    RewriteRule ^JS/users/ - [L]
+    RewriteRule ^Chat - [L]
+
+
+    # Exclude CSS file from rewrite
+
+    # Rewrite everything else to index.php
+    RewriteRule ^ index.php [L]
+</IfModule>

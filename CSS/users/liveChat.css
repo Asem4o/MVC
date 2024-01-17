@@ -1,0 +1,23 @@
+body {
+    background-image: url('/public/images/background/background.jpg');
+    padding: 20px;
+    margin: 0; /* Remove default margin */
+    background-color: lightslategrey;
+}
+.w-400.shadow.p-4.rounded {
+    background-color:  lightslategrey; /* Light Yellow */
+}
+
+.chat-box {
+    background-color: lightslategrey; /* Set the background color for the chat box */
+    border: 1px solid #ddd;
+    padding: 15px;
+    overflow-y: scroll;
+    max-height: 200px;
+}
+
+.message {
+    margin-bottom: 10px;
+    color: #4caf50;
+
+}
