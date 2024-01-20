@@ -16,6 +16,7 @@ use DTO\ViewModels\UsersProfileViewModel;
 use Exception\User\EditProfileException;
 use Exception\User\LoginException;
 use Repositories\Chat\ChatRepositoryInterface;
+use Repositories\Users\UserRepositoryInterface;
 use Services\Narqd\NarqdServiceInterface;
 use Services\Note\NoteServiceInterface;
 use Services\Otpuska\OtpuskaServiceInterface;
@@ -316,6 +317,10 @@ class UsersController
 
     public function hours()
     {
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
 
         $this->view->render();
     }
@@ -422,6 +427,10 @@ class UsersController
 
     public function otpuska()
     {
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
         $this->view->render();
     }
 
@@ -555,17 +564,23 @@ class UsersController
             $this->view->render($sendMessage);
         }
     }
-    public function newChat(UserServiceInterface $userService,ChatServiceInterface $chatService)
+    public function newChat(UserServiceInterface $userService,ChatServiceInterface $chatService,UserRepositoryInterface $userRepository)
     {
+        if (!isset($_SESSION['id'])) {
+            header("Location: login");
+            exit;
+        }
         try {
+
             $selectedUsername = $_POST['username'];
             $cmd = $userService->findByUsername($selectedUsername);
             $reciverId = $cmd->getId();
+            $recivedGuid = $cmd->getGuid();
             $pic = $cmd->getUrl();
             $sender =$_SESSION['id'];
 
             $recivedMessage = $chatService->getMessagesBetweenUsers($reciverId,$sender);
-            $liveChat = new LiveChatProfileCiewModel($selectedUsername,$reciverId ,$pic,null,$recivedMessage);
+            $liveChat = new LiveChatProfileCiewModel($selectedUsername,$recivedGuid ,$pic,null,$recivedMessage);
 
             $this->view->render($liveChat);
         } catch (\Exception\User\ChatException $e){
@@ -576,13 +591,14 @@ class UsersController
         }
 
     }
-    public function insertChat(ChatServiceInterface $chatService)
+    public function insertChat(ChatServiceInterface $chatService,UserRepositoryInterface $userRepository)
     {
         $currEntId = $_SESSION['id'];
         $messages = htmlspecialchars($_POST['message']) ;
-        $toSend = $_POST['to_id'];
-
-       $chatService->createMessage($currEntId,$toSend,$messages);
+        $toSend = htmlspecialchars($_POST['to_id']);
+        $findByGuid = $userRepository->getByGuid($toSend);
+        $toSendUser = $findByGuid->getId();
+       $chatService->createMessage($currEntId,$toSendUser,$messages);
 
 
     }

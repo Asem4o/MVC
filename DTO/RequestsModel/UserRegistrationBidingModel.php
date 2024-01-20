@@ -18,12 +18,6 @@ class UserRegistrationBidingModel
 
     private $guid;
 
-    /**
-     * @return mixed
-     */
-    /**
-     * @return mixed
-     */
     public function getGuid()
     {
         return \Ramsey\Uuid\Uuid::uuid4()->toString() ?? $this->guid;

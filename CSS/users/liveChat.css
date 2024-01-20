@@ -1,23 +1,57 @@
 body {
-    background-image: url('/public/images/background/background.jpg');
+    background-image: url('/public/images/background/backgroundChat.jpg');
     padding: 20px;
     margin: 0; /* Remove default margin */
     background-color: lightslategrey;
 }
+
 .w-400.shadow.p-4.rounded {
-    background-color:  lightslategrey; /* Light Yellow */
+    background-color: lightslategrey;
 }
 
 .chat-box {
-    background-color: lightslategrey; /* Set the background color for the chat box */
-    border: 1px solid #ddd;
-    padding: 15px;
-    overflow-y: scroll;
-    max-height: 200px;
+    max-width: 600px; /* Adjust max-width as needed */
+    width: 100%;
+    border-width: 2px; /* Adjust border width as needed */
+    border-style: solid;
+    background-image: url('/public/images/background/chat.gif');
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adjust shadow as needed */
+    padding: 3%; /* Adjust padding as needed */
+    border-radius: 1%; /* Adjust border-radius for rounded corners */
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%; /* Adjust margin-top as needed */
+    height: 400px; /* Set a specific height for the chat box */
+    overflow: auto; /* Enable both vertical and horizontal scrollbars */
+}
+
+textarea {
+    flex: 1; /* Take up the remaining space */
+    width: 100%;
+    box-sizing: border-box;
+    overflow: auto; /* Enable both vertical and horizontal scrollbars for the textarea */
+}
+
+button {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .message {
     margin-bottom: 10px;
     color: #4caf50;
+}
 
+/* WebKit scrollbar customization */
+.chat-box::-webkit-scrollbar {
+    width: 12px; /* Adjust the width of the scrollbar */
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners of the thumb */
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background-color: #eee; /* Color of the scrollbar track */
 }

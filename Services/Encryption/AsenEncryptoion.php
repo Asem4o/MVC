@@ -3,6 +3,8 @@
 namespace ServServices\Encryption;
 
 
+use Services\Encryption\EncryptionServiceInterface;
+
 class AsenEncryptoion implements EncryptionServiceInterface
 {
     public function hash(string $password): string

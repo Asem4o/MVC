@@ -19,7 +19,9 @@ class ChatService implements ChatServiceInterface
 
     public function createMessage(int $senderId, int $reciverGuid, string $content)
     {
-
+        var_dump($senderId);
+        var_dump($reciverGuid);
+        var_dump($content);
         if ($reciverGuid === null) {
             throw new ChatException("Please select a valid user");
         }

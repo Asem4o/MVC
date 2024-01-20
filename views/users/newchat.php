@@ -16,8 +16,8 @@ use DTO\ViewModels\LiveChatProfileCiewModel; ?>
 <div class="w-400 shadow p-4 rounded">
     <div class="d-flex align-items-center">
         <img width="100px" src= "uploads/../../<?= $model->getPic() ?>" class="w-15 rounded-circle">
-        <h3 class="display-4 fs-sm m-2">
-            <?= $model->getUsername() ?> <br>
+        <h3 class="display-4 fs-sm m-2" style="color: red">
+           <?= $model->getUsername() ?> <br>
             <div class="d-flex align-items-center" title="online">
             </div>
         </h3>
@@ -62,16 +62,14 @@ use DTO\ViewModels\LiveChatProfileCiewModel; ?>
 
             $.post("insertChat", {
                 message: message,
-                to_id: <?= $model->getId() ?>
+                to_id:"<?= $model->getId() ?>"
             }, function(data, status) {
                 $("#message").val("");
                 $("#chatBox").append(data);
                 scrollDown();
-
-                // Reload the page after 1 second
                 setTimeout(function() {
                     location.reload();
-                }, 1000);
+                }, 1);
             });
         });
     });

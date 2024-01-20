@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   KEY `receiverId` (`receiverId`),
   CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`),
   CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`receiverId`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1071 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1178 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `narqd` (
   UNIQUE KEY `guid` (`guid`),
   KEY `FK1_Users_Id_Id` (`userId`),
   CONSTRAINT `FK1_Users_Id_Id` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=126 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `note` (
   UNIQUE KEY `guid` (`guid`),
   KEY `FK1_UserId_` (`userId`),
   CONSTRAINT `FK1_UserId_` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=895 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=896 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `guid` (`guid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Изнасянето на данните беше деселектирано.
 
